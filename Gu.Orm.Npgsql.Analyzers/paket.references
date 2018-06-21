@@ -1,0 +1,8 @@
+group Roslyn
+  Microsoft.CodeAnalysis.CSharp.Workspaces
+  Gu.Roslyn.CodeFixExtensions
+
+group Analyzers
+  IDisposableAnalyzers
+  Gu.Analyzers
+  StyleCop.Analyzers

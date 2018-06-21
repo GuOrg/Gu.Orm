@@ -1,0 +1,12 @@
+Npgsql
+
+group Test
+  System.Configuration.ConfigurationManager
+  NUnit
+  Microsoft.CodeAnalysis.CSharp.Workspaces
+  Gu.Roslyn.Asserts
+
+group Analyzers
+  IDisposableAnalyzers
+  Gu.Analyzers
+  StyleCop.Analyzers
