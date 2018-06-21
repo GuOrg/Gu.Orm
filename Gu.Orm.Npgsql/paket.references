@@ -1,0 +1,6 @@
+Npgsql
+
+group Analyzers
+  IDisposableAnalyzers
+  Gu.Analyzers
+  StyleCop.Analyzers

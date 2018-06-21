@@ -3,6 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{4792FAAB-A120-4BBC-9C26-1F9B8686EE7C}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
+		.paket\paket.targets = .paket\paket.targets
+		.paket\Readme.paket.md = .paket\Readme.paket.md
+	EndProjectSection
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Orm.Npgsql", "Gu.Orm.Npgsql\Gu.Orm.Npgsql.csproj", "{04B7889F-AD6A-4CEC-934D-669BF7EDCD2F}"
 EndProject
 Global

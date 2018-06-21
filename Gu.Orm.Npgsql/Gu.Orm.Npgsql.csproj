@@ -1,13 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="IDisposableAnalyzers" Version="2.0.2.2" />
-    <PackageReference Include="Npgsql" Version="4.0.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
-  </ItemGroup>
-
+  <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

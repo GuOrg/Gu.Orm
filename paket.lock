@@ -1,0 +1,19 @@
+STORAGE: NONE
+NUGET
+  remote: https://www.nuget.org/api/v2
+    Npgsql (4.0)
+      System.Runtime.CompilerServices.Unsafe (>= 4.5) - restriction: || (&& (>= net45) (< netstandard2.0)) (&& (< net45) (>= netstandard2.0)) (>= net451)
+      System.Threading.Tasks.Extensions (>= 4.5) - restriction: || (&& (>= net45) (< netstandard2.0)) (&& (< net45) (>= netstandard2.0)) (>= net451)
+      System.ValueTuple (>= 4.5) - restriction: || (&& (>= net45) (< netstandard2.0)) (&& (< net45) (>= netstandard2.0)) (>= net451)
+    System.Runtime.CompilerServices.Unsafe (4.5.1) - restriction: || (&& (>= net45) (< netstandard1.0)) (&& (>= net45) (< netstandard2.0)) (&& (>= net45) (>= wp8)) (&& (< net45) (>= netstandard2.0)) (>= net451) (&& (< netstandard1.0) (>= netstandard2.0) (>= win8)) (&& (< netstandard1.0) (>= netstandard2.0) (< win8)) (&& (>= netstandard2.0) (>= wp8))
+    System.Threading.Tasks.Extensions (4.5.1) - restriction: || (&& (>= net45) (< netstandard2.0)) (&& (< net45) (>= netstandard2.0)) (>= net451)
+      System.Runtime.CompilerServices.Unsafe (>= 4.5) - restriction: || (&& (< monoandroid) (< monotouch) (>= netstandard1.0) (< netstandard2.0) (< win8) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos)) (&& (< monoandroid) (< netstandard1.0) (>= portable-net45+win8+wp8+wpa81) (< win8)) (>= net45) (&& (< netcoreapp2.1) (>= netstandard2.0)) (&& (< netstandard1.0) (>= win8)) (&& (< netstandard2.0) (>= wpa81)) (>= wp8)
+    System.ValueTuple (4.5) - restriction: || (&& (>= net45) (< netstandard2.0)) (&& (< net45) (>= netstandard2.0)) (>= net451)
+
+GROUP Analyzers
+STORAGE: NONE
+NUGET
+  remote: https://www.nuget.org/api/v2
+    Gu.Analyzers (1.2.13-dev)
+    IDisposableAnalyzers (2.0.2.2)
+    StyleCop.Analyzers (1.0.2)
