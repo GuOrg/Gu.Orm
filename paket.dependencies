@@ -2,6 +2,12 @@ source https://www.nuget.org/api/v2/
 storage: none
 nuget Npgsql
 
+group Test
+  source https://www.nuget.org/api/v2/
+  storage: none
+  nuget NUnit
+  nuget System.Configuration.ConfigurationManager
+
 group Analyzers
   source https://www.nuget.org/api/v2/
   storage: none

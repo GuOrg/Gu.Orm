@@ -1,0 +1,10 @@
+Npgsql
+
+group Test
+  System.Configuration.ConfigurationManager
+  NUnit
+
+group Analyzers
+  IDisposableAnalyzers
+  Gu.Analyzers
+  StyleCop.Analyzers
