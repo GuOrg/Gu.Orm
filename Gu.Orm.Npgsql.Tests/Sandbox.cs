@@ -31,13 +31,13 @@ INSERT INTO foos(text) VALUES
         }
 
         [Test]
-        public void Map()
+        public void Dump()
         {
             using (var db = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
             {
                 db.Open();
                 using (var command = db.CreateCommand(@"SELECT * FROM foos
-                                                        WHERE false"))
+                                            WHERE false"))
                 {
                     using (var reader = command.ExecuteReader())
                     {
