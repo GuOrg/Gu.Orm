@@ -2,6 +2,7 @@
 {
     using System;
     using System.Configuration;
+    using System.Data;
     using global::Npgsql;
     using NUnit.Framework;
 
@@ -37,9 +38,28 @@ INSERT INTO foos(text) VALUES
             {
                 db.Open();
                 using (var command = db.CreateCommand(@"SELECT * FROM foos
-                                            WHERE false"))
+                                                        WHERE false"))
                 {
                     using (var reader = command.ExecuteReader())
+                    {
+                        foreach (var column in reader.GetColumnSchema())
+                        {
+                            Console.WriteLine($"Name: {column.ColumnName}, Type: {column.DataType}");
+                        }
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void SchemaOnly()
+        {
+            using (var db = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
+            {
+                db.Open();
+                using (var command = db.CreateCommand(@"SELECT * FROM foos"))
+                {
+                    using (var reader = command.ExecuteReader(CommandBehavior.SchemaOnly))
                     {
                         foreach (var column in reader.GetColumnSchema())
                         {
