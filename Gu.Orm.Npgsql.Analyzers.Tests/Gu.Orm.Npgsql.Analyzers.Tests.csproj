@@ -5,8 +5,10 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\Gu.Orm.Npgsql\Gu.Orm.Npgsql.csproj" />
+    <ProjectReference Include="..\Gu.Orm.Npgsql.Analyzers\Gu.Orm.Npgsql.Analyzers.csproj" />
   </ItemGroup>
+  
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
