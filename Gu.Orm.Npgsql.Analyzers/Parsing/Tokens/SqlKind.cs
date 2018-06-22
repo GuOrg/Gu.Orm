@@ -4,6 +4,9 @@
     {
         Unknown,
         Identifier,
+        String,
+        Integer,
+        Float,
         Comma,
         Point,
         Semicolon,
