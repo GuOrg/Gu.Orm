@@ -137,6 +137,7 @@
 
                             continue;
                         }
+
                     case '/' when TokenParser.TryPeekNext(sql, position, out next) &&
                                   next == '*':
                         {
