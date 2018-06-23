@@ -9,12 +9,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
         {
             [TestCase("*")]
             [TestCase("bar")]
-            [TestCase("bar AS meh")]
             [TestCase("\"Bar\"")]
             [TestCase("foo.bar")]
             [TestCase("foo.\"Bar\"")]
-            [TestCase("foo.bar AS meh")]
-            [TestCase("foo.\"Bar\" AS meh")]
             public void ColumnRef(string sql)
             {
                 var node = Parse.ColumnRef(sql);
