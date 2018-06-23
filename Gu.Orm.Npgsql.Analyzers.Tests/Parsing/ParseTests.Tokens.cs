@@ -11,6 +11,7 @@
             [TestCase("SELECT 1", "Identifier: SELECT Integer: 1")]
             [TestCase("-- SELECT 'abc'", "Comment: -- SELECT 'abc'")]
             [TestCase("-- SELECT 'abc'\r\nSELECT 1", "Comment: -- SELECT 'abc' Identifier: SELECT Integer: 1")]
+            [TestCase("/*\r\n-- SELECT 'abc'\r\n*/\r\nSELECT 1", "Comment: /*\r\n-- SELECT 'abc'\r\n*/ Identifier: SELECT Integer: 1")]
             [TestCase("SELECT 'abc'", "Identifier: SELECT String: 'abc'")]
             [TestCase("SELECT 1.2", "Identifier: SELECT Float: 1.2")]
             [TestCase("SELECT \"Bar\" FROM foo", "Identifier: SELECT Identifier: \"Bar\" Identifier: FROM Identifier: foo")]

@@ -122,11 +122,22 @@
                             if (TokenParser.SkipTo(sql, '\n', ref position) ||
                                 position == sql.Length)
                             {
-                                tokens.Add(new SqlToken(SqlKind.Comment, start, position));
+                                var end = position;
+                                if (sql[position - 2] == '\r')
+                                {
+                                    end -= 2;
+                                }
+                                else if (sql[position - 1] == '\n')
+                                {
+                                    end -= 1;
+                                }
+
+                                tokens.Add(new SqlToken(SqlKind.Comment, start, end));
                             }
 
                             continue;
                         }
+
                     default:
                         if (char.IsLetter(sql[position]))
                         {
