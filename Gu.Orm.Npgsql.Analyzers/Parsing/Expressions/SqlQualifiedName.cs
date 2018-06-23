@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class SqlQualifiedName : SqlNameSyntax
     {
-        public SqlQualifiedName(SqlIdentifierName prefix, RawToken dot, SqlIdentifierName identifier)
-        : base(ImmutableArray.Create<SqlNode>(prefix, identifier))
+        public SqlQualifiedName(string sql, SqlIdentifierName prefix, RawToken dot, SqlIdentifierName identifier)
+        : base(sql, ImmutableArray.Create<SqlNode>(prefix, identifier))
         {
             this.Prefix = prefix;
             this.Dot = dot.WithParent(this);
@@ -17,5 +17,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         public SqlToken Dot { get; }
 
         public SqlIdentifierName Identifier { get; }
+
+        public override string ToString() => $"{this.Prefix}.{this.Identifier}";
     }
 }

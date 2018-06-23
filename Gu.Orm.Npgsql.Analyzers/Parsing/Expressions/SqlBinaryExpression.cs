@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class SqlBinaryExpression : SqlExpression
     {
-        public SqlBinaryExpression(SqlExpression left, RawToken @operator, SqlExpression right)
-            : base(ImmutableArray.Create<SqlNode>(left, right))
+        public SqlBinaryExpression(string sql, SqlExpression left, RawToken @operator, SqlExpression right)
+            : base(sql, ImmutableArray.Create<SqlNode>(left, right))
         {
             this.Left = left;
             this.Operator = @operator.WithParent(this);

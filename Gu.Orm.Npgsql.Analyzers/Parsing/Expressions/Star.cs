@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class Star : SqlExpression
     {
-        public Star(RawToken token)
-            : base(ImmutableArray<SqlNode>.Empty)
+        public Star(string sql, RawToken token)
+            : base(sql, ImmutableArray<SqlNode>.Empty)
         {
             this.Token = token.WithParent(this);
         }

@@ -8,15 +8,15 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         {
             var tokens = Tokens(sql);
             var position = 0;
-            return ColumnRef(tokens, ref position);
+            return ColumnRef(sql, tokens, ref position);
         }
 
-        private static ColumnRef ColumnRef(ImmutableArray<RawToken> tokens, ref int position)
+        private static ColumnRef ColumnRef(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             if (TryMatch(tokens, position, SqlKind.Multiply, out var token))
             {
                 position++;
-                return new ColumnRef(new Star(token));
+                return new ColumnRef(sql, new Star(sql, token));
             }
 
             if (TryMatch(tokens, position, SqlKind.Identifier, out token))
@@ -24,15 +24,16 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 position++;
                 if (TryMatch(tokens, position, SqlKind.Point, out var point))
                 {
+                    position++;
                     if (TryMatch(tokens, position, SqlKind.Identifier, out var name))
                     {
-                        return new ColumnRef(new SqlQualifiedName(new SqlIdentifierName(token), point, new SqlIdentifierName(name)));
+                        return new ColumnRef(sql, new SqlQualifiedName(sql, new SqlIdentifierName(sql, token), point, new SqlIdentifierName(sql, name)));
                     }
 
                     return null;
                 }
 
-                return new ColumnRef(new SqlIdentifierName(token));
+                return new ColumnRef(sql, new SqlIdentifierName(sql, token));
             }
 
             return null;

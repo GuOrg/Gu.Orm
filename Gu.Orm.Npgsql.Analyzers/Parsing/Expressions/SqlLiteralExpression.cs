@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class SqlLiteralExpression : SqlExpression
     {
-        public SqlLiteralExpression(RawToken token)
-            : base(ImmutableArray<SqlNode>.Empty)
+        public SqlLiteralExpression(string sql, RawToken token)
+            : base(sql, ImmutableArray<SqlNode>.Empty)
         {
             this.Token = token.WithParent(this);
         }

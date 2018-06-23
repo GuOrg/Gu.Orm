@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class ColumnRef : SqlNode
     {
-        public ColumnRef(SqlExpression expression)
-            : base(ImmutableArray.Create<SqlNode>(expression))
+        public ColumnRef(string sql, SqlExpression expression)
+            : base(sql, ImmutableArray.Create<SqlNode>(expression))
         {
             this.Expression = expression;
         }

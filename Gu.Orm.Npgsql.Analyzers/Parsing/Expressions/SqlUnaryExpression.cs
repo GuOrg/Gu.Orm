@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class SqlUnaryExpression : SqlExpression
     {
-        public SqlUnaryExpression(RawToken @operator, SqlExpression operand)
-            : base(ImmutableArray.Create<SqlNode>(operand))
+        public SqlUnaryExpression(string sql, RawToken @operator, SqlExpression operand)
+            : base(sql, ImmutableArray.Create<SqlNode>(operand))
         {
             this.Operator = @operator.WithParent(this);
             this.Operand = operand;

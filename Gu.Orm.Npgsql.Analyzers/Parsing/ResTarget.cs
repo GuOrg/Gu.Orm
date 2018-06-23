@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class ResTarget : SqlNode
     {
-        public ResTarget(SqlIdentifierName name, ColumnRef value)
-            : base(ImmutableArray.Create<SqlNode>(name, value))
+        public ResTarget(string sql, SqlIdentifierName name, ColumnRef value)
+            : base(sql, ImmutableArray.Create<SqlNode>(name, value))
         {
             this.Name = name;
             this.Value = value;

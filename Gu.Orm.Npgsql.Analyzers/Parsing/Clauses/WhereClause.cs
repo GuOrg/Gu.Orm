@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing.Clauses
 
     public class WhereClause : SqlNode
     {
-        protected WhereClause(SqlBinaryExpression condition)
-            : base(ImmutableArray.Create<SqlNode>(condition))
+        protected WhereClause(string sql, SqlBinaryExpression condition)
+            : base(sql, ImmutableArray.Create<SqlNode>(condition))
         {
             this.Condition = condition;
         }

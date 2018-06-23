@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class SqlArgument : SqlNode
     {
-        public SqlArgument(SqlExpression expression)
-            : base(ImmutableArray.Create<SqlNode>(expression))
+        public SqlArgument(string sql, SqlExpression expression)
+            : base(sql, ImmutableArray.Create<SqlNode>(expression))
         {
             this.Expression = expression;
         }

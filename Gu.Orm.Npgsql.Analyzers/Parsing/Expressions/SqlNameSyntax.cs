@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public abstract class SqlNameSyntax : SqlExpression
     {
-        protected SqlNameSyntax(ImmutableArray<SqlNode> children)
-            : base(children)
+        protected SqlNameSyntax(string sql, ImmutableArray<SqlNode> children)
+            : base(sql, children)
         {
         }
     }

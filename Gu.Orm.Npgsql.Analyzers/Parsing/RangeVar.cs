@@ -4,8 +4,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public class RangeVar : SqlNode
     {
-        public RangeVar(SqlIdentifierName schemaName, SqlIdentifierName name, SqlIdentifierName alias)
-            : base(ImmutableArray.Create<SqlNode>(schemaName, name, alias))
+        public RangeVar(string sql, SqlIdentifierName schemaName, SqlIdentifierName name, SqlIdentifierName alias)
+            : base(sql, ImmutableArray.Create<SqlNode>(schemaName, name, alias))
         {
             this.SchemaName = schemaName;
             this.Name = name;

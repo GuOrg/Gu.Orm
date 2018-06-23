@@ -4,8 +4,11 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
     public abstract class SqlNode
     {
-        protected SqlNode(ImmutableArray<SqlNode> children)
+        protected readonly string Sql;
+
+        protected SqlNode(string sql, ImmutableArray<SqlNode> children)
         {
+            this.Sql = sql;
             foreach (var child in children)
             {
                 child.Parent = this;
