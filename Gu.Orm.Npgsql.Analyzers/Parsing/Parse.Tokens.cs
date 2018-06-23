@@ -91,29 +91,42 @@
                         position++;
                         continue;
                     case '\'':
-                    {
-                        var start = position;
-                        position++;
-                        if (TokenParser.SkipTo(sql, '\'', ref position))
                         {
-                            tokens.Add(new SqlToken(SqlKind.String, start, position));
-                        }
+                            var start = position;
+                            position++;
+                            if (TokenParser.SkipTo(sql, '\'', ref position))
+                            {
+                                tokens.Add(new SqlToken(SqlKind.String, start, position));
+                            }
 
-                        continue;
-                    }
+                            continue;
+                        }
 
                     case '"':
-                    {
-                        var start = position;
-                        position++;
-                        if (TokenParser.SkipTo(sql, '"', ref position))
                         {
-                            tokens.Add(new SqlToken(SqlKind.Identifier, start, position));
+                            var start = position;
+                            position++;
+                            if (TokenParser.SkipTo(sql, '"', ref position))
+                            {
+                                tokens.Add(new SqlToken(SqlKind.Identifier, start, position));
+                            }
+
+                            continue;
                         }
 
-                        continue;
-                    }
+                    case '-' when TokenParser.TryPeekNext(sql, position, out next) &&
+                                  next == '-':
+                        {
+                            var start = position;
+                            position++;
+                            if (TokenParser.SkipTo(sql, '\n', ref position) ||
+                                position == sql.Length)
+                            {
+                                tokens.Add(new SqlToken(SqlKind.Comment, start, position));
+                            }
 
+                            continue;
+                        }
                     default:
                         if (char.IsLetter(sql[position]))
                         {
