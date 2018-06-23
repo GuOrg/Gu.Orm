@@ -11,5 +11,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         }
 
         public SqlToken Token { get; }
+
+        public override string ToString() => "*";
     }
 }

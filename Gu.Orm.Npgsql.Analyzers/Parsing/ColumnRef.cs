@@ -11,5 +11,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         }
 
         public SqlExpression Expression { get; }
+
+        public override string ToString() => this.Expression?.ToString() ?? "<missing>";
     }
 }
