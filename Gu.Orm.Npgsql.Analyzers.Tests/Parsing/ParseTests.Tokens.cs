@@ -1,4 +1,4 @@
-﻿namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
+namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
 {
     using System.Linq;
     using Gu.Orm.Npgsql.Analyzers.Parsing;
@@ -45,9 +45,9 @@
                 CollectionAssert.AreEqual(expected, actual);
             }
 
-            private static string TypeAndValue(string sql, SqlToken sqlToken)
+            private static string TypeAndValue(string sql, RawToken token)
             {
-                return $"{sqlToken.Kind}: {sql.Substring(sqlToken.Start, sqlToken.Length)}";
+                return $"{token.Kind}: {sql.Substring(token.Start, token.Length)}";
             }
         }
     }

@@ -1,18 +1,18 @@
-﻿namespace Gu.Orm.Npgsql.Analyzers.Parsing
+namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     using System;
     using System.Collections.Generic;
 
     public static partial class Parse
     {
-        public static IReadOnlyList<SqlToken> Tokens(string sql)
+        public static IReadOnlyList<RawToken> Tokens(string sql)
         {
             if (string.IsNullOrEmpty(sql))
             {
-                return Array.Empty<SqlToken>();
+                return Array.Empty<RawToken>();
             }
 
-            var tokens = new List<SqlToken>();
+            var tokens = new List<RawToken>();
             var position = 0;
             while (position < sql.Length)
             {
@@ -57,7 +57,7 @@
                 }
                 else
                 {
-                    tokens.Add(SqlToken.SingleChar(SqlKind.Unknown, position));
+                    tokens.Add(RawToken.SingleChar(SqlKind.Unknown, position));
                     position++;
                 }
             }
@@ -67,7 +67,7 @@
 
         private static class TokenParser
         {
-            internal static bool TryParseNumber(string sql, int position, out SqlToken token)
+            internal static bool TryParseNumber(string sql, int position, out RawToken token)
             {
                 if (char.IsDigit(sql[position]))
                 {
@@ -88,21 +88,21 @@
                             position++;
                         }
 
-                        token = new SqlToken(SqlKind.Float, start, position);
+                        token = new RawToken(SqlKind.Float, start, position);
                     }
                     else
                     {
-                        token = new SqlToken(SqlKind.Integer, start, position);
+                        token = new RawToken(SqlKind.Integer, start, position);
                     }
 
                     return true;
                 }
 
-                token = default(SqlToken);
+                token = default(RawToken);
                 return false;
             }
 
-            internal static bool TryParseString(string sql, int position, out SqlToken token)
+            internal static bool TryParseString(string sql, int position, out RawToken token)
             {
                 if (sql[position] == '\'')
                 {
@@ -110,21 +110,21 @@
                     position++;
                     if (SkipNext(sql, '\'', ref position))
                     {
-                        token = new SqlToken(SqlKind.String, start, position);
+                        token = new RawToken(SqlKind.String, start, position);
                     }
                     else
                     {
-                        token = new SqlToken(SqlKind.String, start, sql.Length);
+                        token = new RawToken(SqlKind.String, start, sql.Length);
                     }
 
                     return true;
                 }
 
-                token = default(SqlToken);
+                token = default(RawToken);
                 return false;
             }
 
-            internal static bool TryParseIdentifier(string sql, int position, out SqlToken token)
+            internal static bool TryParseIdentifier(string sql, int position, out RawToken token)
             {
                 if (char.IsLetter(sql[position]))
                 {
@@ -136,7 +136,7 @@
                         position++;
                     }
 
-                    token = new SqlToken(SqlKind.Identifier, start, position);
+                    token = new RawToken(SqlKind.Identifier, start, position);
                     return true;
                 }
 
@@ -145,17 +145,17 @@
                     var start = position;
                     position++;
                     token = SkipNext(sql, '"', ref position)
-                        ? new SqlToken(SqlKind.Identifier, start, position)
-                        : new SqlToken(SqlKind.Identifier, start, sql.Length);
+                        ? new RawToken(SqlKind.Identifier, start, position)
+                        : new RawToken(SqlKind.Identifier, start, sql.Length);
 
                     return true;
                 }
 
-                token = default(SqlToken);
+                token = default(RawToken);
                 return false;
             }
 
-            internal static bool TryParseComment(string sql, int position, out SqlToken token)
+            internal static bool TryParseComment(string sql, int position, out RawToken token)
             {
                 if (TryMatch(sql, position, "--"))
                 {
@@ -174,11 +174,11 @@
                             end -= 1;
                         }
 
-                        token = new SqlToken(SqlKind.Comment, start, end);
+                        token = new RawToken(SqlKind.Comment, start, end);
                     }
                     else
                     {
-                        token = new SqlToken(SqlKind.Comment, start, sql.Length);
+                        token = new RawToken(SqlKind.Comment, start, sql.Length);
                     }
 
                     return true;
@@ -189,37 +189,37 @@
                     var start = position;
                     position += 2;
                     token = SkipNext(sql, "*/", ref position)
-                        ? new SqlToken(SqlKind.BlockComment, start, position)
-                        : new SqlToken(SqlKind.BlockComment, start, sql.Length);
+                        ? new RawToken(SqlKind.BlockComment, start, position)
+                        : new RawToken(SqlKind.BlockComment, start, sql.Length);
 
                     return true;
                 }
 
-                token = default(SqlToken);
+                token = default(RawToken);
                 return false;
             }
 
-            internal static bool TryParse(string sql, int position, char expected, SqlKind kind, out SqlToken token)
+            internal static bool TryParse(string sql, int position, char expected, SqlKind kind, out RawToken token)
             {
                 if (TryMatch(sql, position, expected))
                 {
-                    token = SqlToken.SingleChar(kind, position);
+                    token = RawToken.SingleChar(kind, position);
                     return true;
                 }
 
-                token = default(SqlToken);
+                token = default(RawToken);
                 return false;
             }
 
-            internal static bool TryParse(string sql, int position, string expected, SqlKind kind, out SqlToken token)
+            internal static bool TryParse(string sql, int position, string expected, SqlKind kind, out RawToken token)
             {
                 if (TryMatch(sql, position, expected))
                 {
-                    token = new SqlToken(kind, position, position + expected.Length);
+                    token = new RawToken(kind, position, position + expected.Length);
                     return true;
                 }
 
-                token = default(SqlToken);
+                token = default(RawToken);
                 return false;
             }
 
