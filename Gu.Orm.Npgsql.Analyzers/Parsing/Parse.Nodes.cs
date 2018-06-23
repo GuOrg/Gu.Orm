@@ -1,9 +1,17 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
+    using System.Collections.Generic;
     using System.Collections.Immutable;
 
     public static partial class Parse
     {
+        public static TargetList TargetList(string sql)
+        {
+            var tokens = Tokens(sql);
+            var position = 0;
+            return TargetList(sql, tokens, ref position);
+        }
+
         public static ResTarget ResTarget(string sql)
         {
             var tokens = Tokens(sql);
@@ -16,6 +24,25 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             var tokens = Tokens(sql);
             var position = 0;
             return ColumnRef(sql, tokens, ref position);
+        }
+
+        private static TargetList TargetList(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        {
+            var targets = new List<ResTarget>();
+            while (ResTarget(sql, tokens, ref position) is ResTarget target)
+            {
+                targets.Add(target);
+                if (TryMatch(tokens, position, SqlKind.Comma, out _))
+                {
+                    position++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return new TargetList(sql, targets.ToImmutableArray());
         }
 
         private static ResTarget ResTarget(string sql, ImmutableArray<RawToken> tokens, ref int position)

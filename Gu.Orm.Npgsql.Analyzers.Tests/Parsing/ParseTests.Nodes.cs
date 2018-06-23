@@ -9,6 +9,26 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
         public class Nodes
         {
             [TestCase("*")]
+            [TestCase("foo")]
+            [TestCase("foo, bar")]
+            [TestCase("bar AS meh")]
+            [TestCase("\"Bar\"")]
+            [TestCase("\"Bar\" AS \"Meh\"")]
+            [TestCase("foo.bar")]
+            [TestCase("foo.\"Bar\"")]
+            [TestCase("foo.bar AS meh")]
+            [TestCase("foo.\"Bar\" AS meh")]
+            [TestCase("foo.\"Bar1\" AS meh1, foo.\"Bar2\" AS meh2")]
+            [TestCase("foo.\"Bar\" AS \"Meh\"")]
+            [TestCase("foo.\"Bar1\" AS \"Meh1\", foo.\"Bar2\" AS \"Meh2\"")]
+            public void TargetList(string sql)
+            {
+                var node = Parse.TargetList(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                AssertTree(node);
+            }
+
+            [TestCase("*")]
             [TestCase("bar")]
             [TestCase("bar AS meh")]
             [TestCase("\"Bar\"")]
