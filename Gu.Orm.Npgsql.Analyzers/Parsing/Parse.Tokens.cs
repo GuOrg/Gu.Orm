@@ -56,7 +56,7 @@
                         position++;
                         continue;
                     case '<':
-                        if (TokenParser.TryPeekNext(sql, position + 1, out var next))
+                        if (TokenParser.TryPeekNext(sql, position, out var next))
                         {
                             switch (next)
                             {
@@ -76,7 +76,7 @@
                         continue;
 
                     case '>':
-                        if (TokenParser.TryPeekNext(sql, position + 1, out next))
+                        if (TokenParser.TryPeekNext(sql, position, out next))
                         {
                             switch (next)
                             {
@@ -137,28 +137,53 @@
 
                             continue;
                         }
+                    case '/' when TokenParser.TryPeekNext(sql, position, out next) &&
+                                  next == '*':
+                        {
+                            var start = position;
+                            position += 2;
+                            while (TokenParser.SkipTo(sql, '*', ref position))
+                            {
+                                if (TokenParser.TryPeekNext(sql, position, out next) &&
+                                    next == '/')
+                                {
+                                    tokens.Add(new SqlToken(SqlKind.Comment, start, position));
+                                }
+                            }
+
+                            continue;
+                        }
 
                     default:
                         if (char.IsLetter(sql[position]))
                         {
                             var start = position;
-                            TokenParser.SkipIdentifier(sql, ref position);
+                            position++;
+                            while (TokenParser.TryPeek(sql, position, out next) &&
+                                   (char.IsLetterOrDigit(next) || next == '_'))
+                            {
+                                position++;
+                            }
+
                             tokens.Add(new SqlToken(SqlKind.Identifier, start, position));
+                            continue;
                         }
-                        else if (char.IsDigit(sql[position]))
+
+                        if (char.IsDigit(sql[position]))
                         {
                             var start = position;
-                            while (TokenParser.TryPeekNext(sql, position, out next) &&
+                            position++;
+                            while (TokenParser.TryPeek(sql, position, out next) &&
                                    char.IsDigit(next))
                             {
                                 position++;
                             }
 
-                            if (TokenParser.TryPeekNext(sql, position, out next) &&
+                            if (TokenParser.TryPeek(sql, position, out next) &&
                                 next == '.')
                             {
                                 position++;
-                                while (TokenParser.TryPeekNext(sql, position, out next) &&
+                                while (TokenParser.TryPeek(sql, position, out next) &&
                                        char.IsDigit(next))
                                 {
                                     position++;
@@ -186,7 +211,7 @@
 
         private static class TokenParser
         {
-            public static bool TryPeekNext(string sql, int position, out char c)
+            public static bool TryPeek(string sql, int position, out char c)
             {
                 if (position < sql.Length)
                 {
@@ -198,28 +223,30 @@
                 return false;
             }
 
+            public static bool TryPeekNext(string sql, int position, out char c)
+            {
+                if (position + 1 < sql.Length)
+                {
+                    c = sql[position + 1];
+                    return true;
+                }
+
+                c = default(char);
+                return false;
+            }
+
             public static void SkipWhitespace(string sql, ref int position)
             {
                 while (position < sql.Length &&
-                       Char.IsWhiteSpace(sql[position]))
+                       char.IsWhiteSpace(sql[position]))
                 {
                     position++;
                 }
             }
-
-            public static void SkipIdentifier(string sql, ref int position)
-            {
-                while (position < sql.Length && IsIdentifier(sql[position]))
-                {
-                    position++;
-                }
-            }
-
-            private static bool IsIdentifier(char c) => Char.IsLetterOrDigit(c) || c == '_';
 
             public static bool SkipTo(string sql, char end, ref int position)
             {
-                while (TryPeekNext(sql, position, out var next))
+                while (TryPeek(sql, position, out var next))
                 {
                     position++;
                     if (next == end)
