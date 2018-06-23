@@ -1,15 +1,15 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
 
     public static partial class Parse
     {
-        public static IReadOnlyList<RawToken> Tokens(string sql)
+        public static ImmutableArray<RawToken> Tokens(string sql)
         {
             if (string.IsNullOrEmpty(sql))
             {
-                return Array.Empty<RawToken>();
+                return ImmutableArray<RawToken>.Empty;
             }
 
             var tokens = new List<RawToken>();
@@ -62,7 +62,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 }
             }
 
-            return tokens;
+            return tokens.ToImmutableArray();
         }
 
         private static class TokenParser
