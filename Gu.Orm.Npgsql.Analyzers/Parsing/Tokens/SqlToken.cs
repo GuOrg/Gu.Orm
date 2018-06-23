@@ -19,5 +19,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         public int End { get; }
 
         public int Length => this.End - this.Start;
+
+        public string ToDisplayString(string sql) => sql.Substring(this.Start, this.Length);
     }
 }

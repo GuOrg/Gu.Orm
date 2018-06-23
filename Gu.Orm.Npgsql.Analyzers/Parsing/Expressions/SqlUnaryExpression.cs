@@ -1,11 +1,9 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    using System.Collections.Immutable;
-
     public class SqlUnaryExpression : SqlExpression
     {
         public SqlUnaryExpression(string sql, RawToken @operator, SqlExpression operand)
-            : base(sql, ImmutableArray.Create<SqlNode>(operand))
+            : base(sql, CreateChildren(operand))
         {
             this.Operator = @operator.WithParent(this);
             this.Operand = operand;
@@ -14,5 +12,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         public SqlToken Operator { get; }
 
         public SqlExpression Operand { get; }
+
+        public override string ToDisplayString() => $"{this.Operator.ToDisplayString(this.Sql)} {this.Operand.ToDisplayString()}";
     }
 }

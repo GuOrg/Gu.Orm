@@ -1,11 +1,9 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    using System.Collections.Immutable;
-
     public class SqlParameter : SqlNameSyntax
     {
         public SqlParameter(string sql, RawToken at, SqlIdentifierName identifier)
-            : base(sql, ImmutableArray.Create<SqlNode>(identifier))
+            : base(sql, CreateChildren(identifier))
         {
             this.At = at.WithParent(this);
             this.Identifier = identifier;
@@ -14,5 +12,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         public SqlToken At { get; }
 
         public SqlExpression Identifier { get; }
+
+        public override string ToDisplayString() => $"{this.At.ToDisplayString(this.Sql)}{this.Identifier.ToDisplayString()}";
     }
 }

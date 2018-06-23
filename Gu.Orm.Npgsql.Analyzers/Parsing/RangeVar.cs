@@ -1,11 +1,9 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    using System.Collections.Immutable;
-
     public class RangeVar : SqlNode
     {
         public RangeVar(string sql, SqlIdentifierName schemaName, SqlIdentifierName name, SqlIdentifierName alias)
-            : base(sql, ImmutableArray.Create<SqlNode>(schemaName, name, alias))
+            : base(sql, CreateChildren(schemaName, name, alias))
         {
             this.SchemaName = schemaName;
             this.Name = name;
@@ -17,5 +15,15 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         public SqlIdentifierName Name { get; }
 
         public SqlIdentifierName Alias { get; }
+
+        public override string ToDisplayString()
+        {
+            if (this.Alias != null)
+            {
+                return $"{this.Name.ToDisplayString()} {this.Alias.ToDisplayString()}";
+            }
+
+            return this.Name.ToDisplayString();
+        }
     }
 }

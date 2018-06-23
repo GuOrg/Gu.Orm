@@ -12,6 +12,6 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlToken Identifier { get; }
 
-        public override string ToString() => this.Sql.Substring(this.Identifier.Start, this.Identifier.Length);
+        public override string ToDisplayString() => this.Identifier.ToDisplayString(this.Sql);
     }
 }
