@@ -1,4 +1,4 @@
-﻿namespace Gu.Orm.Npgsql.Tests
+namespace Gu.Orm.Npgsql.Tests
 {
     using System.Configuration;
     using System.Linq;
@@ -75,7 +75,7 @@ INSERT INTO foos(text) VALUES
                     "SELECT id, text FROM foos WHERE id = @id",
                     new NpgsqlParameter("id", 5)))
                 {
-                    Assert.AreEqual(false, command.MapSingle(x => new ImmutableFoo(x.GetInt32(0), x.GetString(1)), out var foo));
+                    Assert.AreEqual(false, command.MapSingle(x => new ImmutableFoo(x.GetInt32(0), x.GetString(1)), out _));
                 }
             }
         }

@@ -288,16 +288,10 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             {
                 while (SkipNext(sql, end[0], ref position))
                 {
-                    for (var i = 1; i < end.Length; i++)
+                    if (TryMatch(sql, position - 1, end))
                     {
-                        if (TryPeek(sql, position + i - 1, out var c) &&
-                            end[i] == c)
-                        {
-                            continue;
-                        }
+                        return true;
                     }
-
-                    return true;
                 }
 
                 return false;
