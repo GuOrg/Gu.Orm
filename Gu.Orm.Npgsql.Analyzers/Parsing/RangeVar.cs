@@ -2,16 +2,16 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     public class RangeVar : SqlNode
     {
-        public RangeVar(string sql, SqlNameSyntax name, SqlNameSyntax alias)
+        public RangeVar(string sql, SqlName name, SqlName alias)
             : base(sql, CreateChildren(name, alias))
         {
             this.Name = name;
             this.Alias = alias;
         }
 
-        public SqlNameSyntax Name { get; }
+        public SqlName Name { get; }
 
-        public SqlNameSyntax Alias { get; }
+        public SqlName Alias { get; }
 
         public override string ToDisplayString()
         {

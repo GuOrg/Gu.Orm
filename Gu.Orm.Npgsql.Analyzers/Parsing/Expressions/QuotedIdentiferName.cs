@@ -2,7 +2,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     using System.Collections.Immutable;
 
-    public class QuotedIdentiferName : SqlNameSyntax
+    public class QuotedIdentiferName : SqlSimpleName
     {
         public QuotedIdentiferName(string sql, RawToken identifier)
             : base(sql, ImmutableArray<SqlNode>.Empty)

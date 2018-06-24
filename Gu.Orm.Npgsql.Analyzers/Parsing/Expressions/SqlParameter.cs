@@ -1,6 +1,6 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    public class SqlParameter : SqlNameSyntax
+    public class SqlParameter : SqlName
     {
         public SqlParameter(string sql, RawToken at, SqlIdentifierName identifier)
             : base(sql, CreateChildren(identifier))

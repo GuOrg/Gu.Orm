@@ -1,8 +1,8 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    public class SqlQualifiedName : SqlNameSyntax
+    public class SqlQualifiedName : SqlName
     {
-        public SqlQualifiedName(string sql, SqlIdentifierName prefix, RawToken dot, SqlIdentifierName identifier)
+        public SqlQualifiedName(string sql, SqlSimpleName prefix, RawToken dot, SqlSimpleName identifier)
         : base(sql, CreateChildren(prefix, identifier))
         {
             this.Prefix = prefix;
@@ -10,11 +10,11 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             this.Identifier = identifier;
         }
 
-        public SqlIdentifierName Prefix { get; }
+        public SqlSimpleName Prefix { get; }
 
         public SqlToken Dot { get; }
 
-        public SqlIdentifierName Identifier { get; }
+        public SqlSimpleName Identifier { get; }
 
         public override string ToDisplayString()
         {

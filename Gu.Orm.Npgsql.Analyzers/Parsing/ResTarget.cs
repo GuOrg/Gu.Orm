@@ -2,7 +2,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     public class ResTarget : SqlNode
     {
-        public ResTarget(string sql, SqlExpression value, RawToken @as, SqlIdentifierName name)
+        public ResTarget(string sql, SqlExpression value, RawToken @as, SqlSimpleName name)
             : base(sql, CreateChildren(value, name))
         {
             this.Value = value;
@@ -14,7 +14,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlToken As { get; }
 
-        public SqlIdentifierName Name { get; }
+        public SqlSimpleName Name { get; }
 
         public override string ToDisplayString()
         {

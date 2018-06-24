@@ -290,6 +290,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 {
                     if (TryMatch(sql, position - 1, end))
                     {
+                        position += end.Length - 1;
                         return true;
                     }
                 }

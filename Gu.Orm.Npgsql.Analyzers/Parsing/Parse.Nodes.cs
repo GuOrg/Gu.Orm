@@ -53,7 +53,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         private static RangeVar RangeVar(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             var start = position;
-            if (Name(sql, tokens, ref position) is SqlNameSyntax name)
+            if (Name(sql, tokens, ref position) is SqlName name)
             {
                 if (TryMatch(tokens, position, SqlKind.Identifier, out var next) &&
                     !TryMatchKeyword(sql, tokens, position, "WHERE", out _))
@@ -122,7 +122,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             }
 
             var start = position;
-            if (Name(sql, tokens, ref position) is SqlNameSyntax name &&
+            if (Name(sql, tokens, ref position) is SqlName name &&
                 !TryMatch(tokens, position, SqlKind.OpenParen, out _))
             {
                 return new ColumnRef(sql, name);
@@ -148,7 +148,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         private static SqlInvocation Invocation(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             var start = position;
-            if (Name(sql, tokens, ref position) is SqlNameSyntax name &&
+            if (Name(sql, tokens, ref position) is SqlName name &&
                 TryMatch(tokens, position, SqlKind.OpenParen, out var openParen))
             {
                 position++;
@@ -200,7 +200,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         private static SqlExpression Expression(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
-            if (Name(sql, tokens, ref position) is SqlNameSyntax name)
+            if (Name(sql, tokens, ref position) is SqlName name)
             {
                 return name;
             }
@@ -218,39 +218,54 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return null;
         }
 
-        private static SqlNameSyntax Name(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        private static SqlName Name(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
-            if (TryMatch(tokens, position, SqlKind.Identifier, out var token))
+            if (SqlSimpleName(sql, tokens, ref position) is SqlSimpleName simpleName)
             {
-                position++;
                 if (TryMatch(tokens, position, SqlKind.Point, out var point))
                 {
                     position++;
-                    if (TryMatch(tokens, position, SqlKind.Identifier, out var name))
+                    if (SqlSimpleName(sql, tokens, ref position) is SqlSimpleName name)
                     {
-                        position++;
-                        return new SqlQualifiedName(sql, new SqlIdentifierName(sql, token), point, new SqlIdentifierName(sql, name));
+                        return new SqlQualifiedName(sql, simpleName, point, name);
                     }
 
-                    return new SqlQualifiedName(sql, new SqlIdentifierName(sql, token), point, null);
+                    return new SqlQualifiedName(sql, simpleName, point, null);
                 }
 
-                return new SqlIdentifierName(sql, token);
+                return simpleName;
             }
 
             return null;
         }
 
-        private static bool TryAs(string sql, ImmutableArray<RawToken> tokens, ref int position, out RawToken @as, out SqlIdentifierName name)
+        private static SqlSimpleName SqlSimpleName(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        {
+            if (TryMatch(tokens, position, SqlKind.Identifier, out var token) &&
+                !IsReservedKeyword(sql, token))
+            {
+                position++;
+                return new SqlIdentifierName(sql, token);
+            }
+
+            if (TryMatch(tokens, position, SqlKind.QuotedIdentifier, out token))
+            {
+                position++;
+                return new QuotedIdentiferName(sql, token);
+            }
+
+            return null;
+        }
+
+        private static bool TryAs(string sql, ImmutableArray<RawToken> tokens, ref int position, out RawToken @as, out SqlSimpleName name)
         {
             name = null;
             if (TryMatchKeyword(sql, tokens, position, "AS", out @as))
             {
                 position++;
-                if (TryMatch(tokens, position, SqlKind.Identifier, out var nameToken))
+                if (SqlSimpleName(sql, tokens, ref position) is SqlSimpleName simpleName)
                 {
-                    position++;
-                    name = new SqlIdentifierName(sql, nameToken);
+                    name = simpleName;
                 }
 
                 return true;
@@ -274,16 +289,14 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return false;
         }
 
-        private static bool TryMatchKeyword(string sql, ImmutableArray<RawToken> tokens, int position, string keyWord, out RawToken token)
+        private static bool TryMatchKeyword(string sql, RawToken token, string keyword)
         {
-            if (TryMatch(tokens, position, SqlKind.Identifier, out token) &&
-                token.Length == keyWord.Length)
+            if (token.Length == keyword.Length)
             {
                 for (int i = 0; i < token.Length; i++)
                 {
-                    if (char.ToUpper(sql[token.Start + i]) != keyWord[i])
+                    if (char.ToUpper(sql[token.Start + i]) != keyword[i])
                     {
-                        token = default(RawToken);
                         return false;
                     }
                 }
@@ -291,7 +304,31 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 return true;
             }
 
+            return false;
+        }
+
+        private static bool TryMatchKeyword(string sql, ImmutableArray<RawToken> tokens, int position, string keyword, out RawToken token)
+        {
+            if (TryMatch(tokens, position, SqlKind.Identifier, out token) &&
+                TryMatchKeyword(sql, token, keyword))
+            {
+                return true;
+            }
+
             token = default(RawToken);
+            return false;
+        }
+
+        private static bool IsReservedKeyword(string sql, RawToken token)
+        {
+            foreach (var keyword in Keywords.Reserved)
+            {
+                if (TryMatchKeyword(sql, token, keyword))
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
     }

@@ -2,9 +2,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     using System.Collections.Immutable;
 
-    public abstract class SqlNameSyntax : SqlExpression
+    public abstract class SqlName : SqlExpression
     {
-        protected SqlNameSyntax(string sql, ImmutableArray<SqlNode> children)
+        protected SqlName(string sql, ImmutableArray<SqlNode> children)
             : base(sql, children)
         {
         }
