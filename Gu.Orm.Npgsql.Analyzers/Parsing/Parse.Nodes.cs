@@ -43,6 +43,13 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return Literal(sql, tokens, ref position);
         }
 
+        public static SqlBinaryExpression BinaryExpression(string sql)
+        {
+            var tokens = Tokens(sql);
+            var position = 0;
+            return BinaryExpression(sql, tokens, ref position);
+        }
+
         public static SqlInvocation Invocation(string sql)
         {
             var tokens = Tokens(sql);
@@ -155,6 +162,51 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return null;
         }
 
+        private static SqlBinaryExpression BinaryExpression(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        {
+            var start = position;
+            var left = (SqlExpression)Literal(sql, tokens, ref position) ??
+                       (SqlExpression)Invocation(sql, tokens, ref position) ??
+                       (SqlExpression)Name(sql, tokens, ref position);
+            if (left != null &&
+                position < tokens.Length)
+            {
+                var op = tokens[position];
+                if (IsBinaryOperator(op))
+                {
+                    position++;
+                    var right = (SqlExpression)Literal(sql, tokens, ref position) ??
+                               (SqlExpression)Invocation(sql, tokens, ref position) ??
+                               (SqlExpression)Name(sql, tokens, ref position);
+                    if (right != null)
+                    {
+                        return new SqlBinaryExpression(sql, left, op, right);
+                    }
+
+                    return new SqlBinaryExpression(sql, left, op, null);
+                }
+            }
+
+            position = start;
+            return null;
+
+            bool IsBinaryOperator(RawToken candidate)
+            {
+                if (candidate.Kind.IsBinaryOperator())
+                {
+                    return true;
+                }
+
+                if (candidate.Kind is SqlKind.Identifier)
+                {
+                    return TryMatchKeyword(sql, candidate, "AND") ||
+                           TryMatchKeyword(sql, candidate, "OR");
+                }
+
+                return false;
+            }
+        }
+
         private static SqlInvocation Invocation(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             var start = position;
@@ -211,8 +263,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         private static SqlExpression Expression(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
-            return (SqlExpression)Literal(sql, tokens, ref position) ??
-                   (SqlExpression)Invocation(sql, tokens, ref position) ??
+            return (SqlExpression)Invocation(sql, tokens, ref position) ??
+                   (SqlExpression)BinaryExpression(sql, tokens, ref position) ??
+                   (SqlExpression)Literal(sql, tokens, ref position) ??
                    (SqlExpression)Name(sql, tokens, ref position);
         }
 

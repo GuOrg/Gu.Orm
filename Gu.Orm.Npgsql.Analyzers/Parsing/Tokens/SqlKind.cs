@@ -36,10 +36,11 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         Comment,
         BlockComment,
         Equal,
+        NotEqual,
         LessThan,
         LessThanOrEqual,
         GreaterThan,
         GreaterThanOrEqual,
-        None
+        None,
     }
 }

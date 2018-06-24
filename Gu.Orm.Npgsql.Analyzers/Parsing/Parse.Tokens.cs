@@ -21,6 +21,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     TokenParser.TryParseString(sql, position, out token) ||
                     TokenParser.TryParseComment(sql, position, out token) ||
                     TokenParser.TryParseIdentifier(sql, position, out token) ||
+                    TokenParser.TryParse(sql, position, "<>", SqlKind.NotEqual, out token) ||
                     TokenParser.TryParse(sql, position, "<=", SqlKind.LessThanOrEqual, out token) ||
                     TokenParser.TryParse(sql, position, ">=", SqlKind.GreaterThanOrEqual, out token) ||
                     TokenParser.TryParse(sql, position, "|/", SqlKind.SquareRoot, out token) ||

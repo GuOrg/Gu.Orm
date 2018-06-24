@@ -24,6 +24,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("1 | 2", "Integer: 1 BitwiseOr: | Integer: 2")]
             [TestCase("1 # 2", "Integer: 1 BitwiseXor: # Integer: 2")]
             [TestCase("~ 2", "BitwiseNot: ~ Integer: 2")]
+            [TestCase("1 <> 2", "Integer: 1 NotEqual: <> Integer: 2")]
             [TestCase("1 << 2", "Integer: 1 BitwiseShiftLeft: << Integer: 2")]
             [TestCase("1 >> 2", "Integer: 1 BitwiseShiftRight: >> Integer: 2")]
             [TestCase("-- SELECT 'abc'", "Comment: -- SELECT 'abc'")]

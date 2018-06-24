@@ -116,6 +116,35 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
                 AssertTree(node);
             }
 
+            [TestCase("a = b")]
+            [TestCase("a <> b")]
+            [TestCase("a < b")]
+            [TestCase("a <= b")]
+            [TestCase("a > b")]
+            [TestCase("a >= b")]
+            [TestCase("a + b")]
+            [TestCase("a - b")]
+            [TestCase("a / b")]
+            [TestCase("a % b")]
+            [TestCase("a ^ b")]
+            [TestCase("a |/ b")]
+            [TestCase("a ||/ b")]
+            [TestCase("a ! b")]
+            [TestCase("a & b")]
+            [TestCase("a | b")]
+            [TestCase("a # b")]
+            [TestCase("a << b")]
+            [TestCase("a >> b")]
+            [TestCase("a AND b")]
+            [TestCase("a OR b")]
+            public void BinaryExpression(string sql)
+            {
+                var node = Parse.BinaryExpression(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
+                AssertTree(node);
+            }
+
             [TestCase("NOW()")]
             [TestCase("MAX(foo)")]
             [TestCase("MAX(foo.bar)")]
@@ -126,15 +155,6 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             public void Invocation(string sql)
             {
                 var node = Parse.Invocation(sql);
-                Assert.AreEqual(sql, node.ToDisplayString());
-                Assert.AreEqual(true, node.IsValid);
-                AssertTree(node);
-            }
-
-            [TestCase("1 <> 2")]
-            public void BinaryExpression(string sql)
-            {
-                var node = Parse.BinaryExpression(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
                 Assert.AreEqual(true, node.IsValid);
                 AssertTree(node);
