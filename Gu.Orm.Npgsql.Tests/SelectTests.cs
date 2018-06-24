@@ -13,7 +13,7 @@ namespace Gu.Orm.Npgsql.Tests
             using (var db = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["Database"].ConnectionString))
             {
                 db.Open();
-                var command = db.CreateCommand(@"
+                using (var command = db.CreateCommand(@"
 DROP TABLE IF EXISTS foos;
 
 CREATE TABLE foos(
@@ -25,8 +25,10 @@ INSERT INTO foos(text) VALUES
   ('2'),
   ('3'),
   ('4');
-");
-                command.ExecuteNonQuery();
+"))
+                {
+                    command.ExecuteNonQuery();
+                }
             }
         }
 

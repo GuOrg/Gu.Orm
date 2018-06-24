@@ -1,5 +1,8 @@
-﻿namespace Gu.Orm.Npgsql.Analyzers.Parsing
+namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
+    using System.Diagnostics;
+
+    [DebuggerDisplay("{this.Kind}")]
     public struct RawToken
     {
         public RawToken(SqlKind kind, int start, int end)

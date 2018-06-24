@@ -1,6 +1,9 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    public struct SqlToken
+    using System.Diagnostics;
+
+    [DebuggerDisplay("{this.Kind}")]
+    public readonly struct SqlToken
     {
         public SqlToken(SqlKind kind, int start, int end, SqlNode parent)
         {
