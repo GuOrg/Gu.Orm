@@ -110,6 +110,16 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 return new ResTarget(sql, literal, RawToken.None, null);
             }
 
+            if (Invocation(sql, tokens, ref position) is SqlInvocation invocation)
+            {
+                if (TryAs(sql, tokens, ref position, out var @as, out var name))
+                {
+                    return new ResTarget(sql, invocation, @as, name);
+                }
+
+                return new ResTarget(sql, invocation, RawToken.None, null);
+            }
+
             return null;
         }
 
@@ -157,6 +167,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 {
                     if (TryMatch(tokens, position, SqlKind.CloseParen, out var closeParen))
                     {
+                        position++;
                         return new SqlInvocation(sql, name, openParen, arguments == null ? null : new SqlArgumentList(sql, arguments.ToImmutableArray()), closeParen);
                     }
 
@@ -220,12 +231,12 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         private static SqlName Name(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
-            if (SqlSimpleName(sql, tokens, ref position) is SqlSimpleName simpleName)
+            if (SqlSimpleName(sql, tokens, ref position, allowKeyword: true) is SqlSimpleName simpleName)
             {
                 if (TryMatch(tokens, position, SqlKind.Point, out var point))
                 {
                     position++;
-                    if (SqlSimpleName(sql, tokens, ref position) is SqlSimpleName name)
+                    if (SqlSimpleName(sql, tokens, ref position, allowKeyword: true) is SqlSimpleName name)
                     {
                         return new SqlQualifiedName(sql, simpleName, point, name);
                     }
@@ -239,11 +250,16 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return null;
         }
 
-        private static SqlSimpleName SqlSimpleName(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        private static SqlSimpleName SqlSimpleName(string sql, ImmutableArray<RawToken> tokens, ref int position, bool allowKeyword)
         {
-            if (TryMatch(tokens, position, SqlKind.Identifier, out var token) &&
-                !IsReservedKeyword(sql, token))
+            if (TryMatch(tokens, position, SqlKind.Identifier, out var token))
             {
+                if (!allowKeyword &&
+                    IsReservedKeyword(sql, token))
+                {
+                    return null;
+                }
+
                 position++;
                 return new SqlIdentifierName(sql, token);
             }
@@ -263,7 +279,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             if (TryMatchKeyword(sql, tokens, position, "AS", out @as))
             {
                 position++;
-                if (SqlSimpleName(sql, tokens, ref position) is SqlSimpleName simpleName)
+                if (SqlSimpleName(sql, tokens, ref position, true) is SqlSimpleName simpleName)
                 {
                     name = simpleName;
                 }

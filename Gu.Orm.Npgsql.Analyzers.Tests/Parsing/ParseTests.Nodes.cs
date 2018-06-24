@@ -41,6 +41,10 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("foo.bar AS meh")]
             [TestCase("foo.\"Bar\" AS meh")]
             [TestCase("foo.\"Bar\" AS \"Meh\"")]
+            [TestCase("UPPER(word)")]
+            [TestCase("UPPER(word) AS upper_word")]
+            [TestCase("UPPER(word) AS SELECT")]
+            [TestCase("UPPER(word) AS \"SELECT\"")]
             public void ResTarget(string sql)
             {
                 var node = Parse.ResTarget(sql);
