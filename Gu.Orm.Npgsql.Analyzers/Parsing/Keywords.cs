@@ -7,7 +7,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         /// <summary>
         /// SELECT word FROM pg_get_keywords() WHERE catcode = 'R'
         /// </summary>
-        public static ImmutableArray<string> Reserved = ImmutableArray.Create<string>(
+        public static ImmutableArray<string> Reserved = ImmutableArray.Create(
             "ALL",
             "ANALYSE",
             "ANALYZE",

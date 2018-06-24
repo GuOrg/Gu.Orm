@@ -138,11 +138,23 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("a AND b")]
             [TestCase("a OR b")]
             [TestCase("(1 + 2) < (2 + 3)")]
-            [TestCase("a = b AND c <> d")]
             public void BinaryExpression(string sql)
             {
                 var node = Parse.BinaryExpression(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
+                AssertTree(node);
+            }
+
+            [TestCase("a = b AND c <> d", "a = b", "c <> d")]
+            [TestCase("a OR b AND c", "a", "b AND c")]
+            [TestCase("a AND b OR c", "a AND B", "c")]
+            public void BinaryExpressionPrecedence(string sql, string left, string right)
+            {
+                var node = Parse.BinaryExpression(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(left, node.Left.ToDisplayString());
+                Assert.AreEqual(right, node.Right.ToDisplayString());
                 Assert.AreEqual(true, node.IsValid);
                 AssertTree(node);
             }

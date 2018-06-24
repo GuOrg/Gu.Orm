@@ -173,10 +173,12 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         private static SqlBinaryExpression BinaryExpression(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             var start = position;
+            //// ReSharper disable RedundantCast
             var left = (SqlExpression)Invocation(sql, tokens, ref position) ??
                        (SqlExpression)ParenthesizedExpression(sql, tokens, ref position) ??
                        (SqlExpression)Literal(sql, tokens, ref position) ??
                        (SqlExpression)Name(sql, tokens, ref position);
+            //// ReSharper restore RedundantCast
             if (left != null &&
                 tokens.TryElementAt(position, out var op) &&
                 IsBinaryOperator(op))
@@ -292,11 +294,13 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         private static SqlExpression Expression(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
+            //// ReSharper disable RedundantCast for symmetry
             return (SqlExpression)Invocation(sql, tokens, ref position) ??
                    (SqlExpression)ParenthesizedExpression(sql, tokens, ref position) ??
                    (SqlExpression)BinaryExpression(sql, tokens, ref position) ??
                    (SqlExpression)Literal(sql, tokens, ref position) ??
                    (SqlExpression)Name(sql, tokens, ref position);
+            //// ReSharper restore RedundantCast
         }
 
         private static SqlName Name(string sql, ImmutableArray<RawToken> tokens, ref int position)
