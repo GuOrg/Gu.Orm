@@ -116,11 +116,23 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("MAX(foo)")]
             [TestCase("MAX(foo.bar)")]
             [TestCase("MOD(1, 2)")]
+            [TestCase("UPPER(CONCAT('a', 'b'))")]
+            [TestCase("UPPER(CONCAT('a', 'b', UPPER('c')))")]
             public void Invocation(string sql)
             {
                 var node = Parse.Invocation(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
                 Assert.AreEqual(true, node.IsValid);
+                AssertTree(node);
+            }
+
+            [Explicit("Fix later")]
+            [TestCase("MOD(1,, 2)")]
+            public void InvocationInvalid(string sql)
+            {
+                var node = Parse.Invocation(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(false, node.IsValid);
                 AssertTree(node);
             }
 

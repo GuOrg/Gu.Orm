@@ -211,11 +211,6 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         private static SqlExpression Expression(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
-            if (Name(sql, tokens, ref position) is SqlName name)
-            {
-                return name;
-            }
-
             if (Literal(sql, tokens, ref position) is SqlLiteral literal)
             {
                 return literal;
@@ -224,6 +219,11 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             if (Invocation(sql, tokens, ref position) is SqlInvocation invocation)
             {
                 return invocation;
+            }
+
+            if (Name(sql, tokens, ref position) is SqlName name)
+            {
+                return name;
             }
 
             return null;
