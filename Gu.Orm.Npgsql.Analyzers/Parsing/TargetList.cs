@@ -13,6 +13,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public ImmutableArray<ResTarget> Targets { get; }
 
+        public override bool IsValid => this.Targets.All(x => x?.IsValid == true);
+
         public override string ToDisplayString()
         {
             return string.Join(", ", this.Targets.Select(x => x.ToDisplayString()));

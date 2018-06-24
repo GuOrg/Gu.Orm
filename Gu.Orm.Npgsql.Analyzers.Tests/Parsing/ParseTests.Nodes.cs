@@ -27,6 +27,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             {
                 var node = Parse.TargetList(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
                 AssertTree(node);
             }
 
@@ -49,6 +50,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             {
                 var node = Parse.ResTarget(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
                 AssertTree(node);
             }
 
@@ -62,6 +64,18 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             {
                 var node = Parse.RangeVar(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
+                AssertTree(node);
+            }
+
+            [TestCase("foo WHERE", "foo")]
+            [TestCase("foo f WHERE", "foo f")]
+            [TestCase("foo.\"Bar\" b WHERE", "foo.\"Bar\" b")]
+            public void RangeVarEnd(string sql, string expected)
+            {
+                var node = Parse.RangeVar(sql);
+                Assert.AreEqual(expected, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
                 AssertTree(node);
             }
 
@@ -74,6 +88,16 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             {
                 var node = Parse.ColumnRef(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
+                AssertTree(node);
+            }
+
+            [TestCase("foo.")]
+            public void ColumnRefInvalid(string sql)
+            {
+                var node = Parse.ColumnRef(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(false, node.IsValid);
                 AssertTree(node);
             }
 
@@ -84,6 +108,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             {
                 var node = Parse.Literal(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
                 AssertTree(node);
             }
 
@@ -95,6 +120,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             {
                 var node = Parse.Invocation(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
                 AssertTree(node);
             }
 

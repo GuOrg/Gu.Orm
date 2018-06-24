@@ -16,10 +16,14 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlSimpleName Identifier { get; }
 
+        public override bool IsValid => this.Prefix?.IsValid == true &&
+                                        this.Dot.Kind == SqlKind.Point &&
+                                        this.Identifier?.IsValid == true;
+
         public override string ToDisplayString()
         {
             return this.Prefix != null
-                ? $"{this.Prefix.ToDisplayString()}.{this.Identifier.ToDisplayString()}"
+                ? $"{this.Prefix.ToDisplayString()}.{this.Identifier?.ToDisplayString() ?? string.Empty}"
                 : this.Identifier.ToDisplayString();
         }
     }

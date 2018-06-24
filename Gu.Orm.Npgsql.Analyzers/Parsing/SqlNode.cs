@@ -21,6 +21,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlNode Parent { get; private set; }
 
+        public abstract bool IsValid { get; }
+
         public abstract string ToDisplayString();
 
         protected static ImmutableArray<SqlNode> CreateChildren(SqlNode node)

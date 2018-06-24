@@ -16,6 +16,22 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlSimpleName Name { get; }
 
+        public override bool IsValid
+        {
+            get
+            {
+                if (this.As.Kind == SqlKind.None)
+                {
+                    return this.Value?.IsValid == true &&
+                           this.Name == null;
+                }
+
+                return this.Value?.IsValid == true &&
+                       this.As.Kind == SqlKind.Identifier &&
+                       this.Name?.IsValid == true;
+            }
+        }
+
         public override string ToDisplayString()
         {
             return this.Name != null

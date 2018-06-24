@@ -12,6 +12,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlToken Token { get; }
 
+        public override bool IsValid => this.Token.Kind != SqlKind.Unknown &&
+                                        this.Token.Kind != SqlKind.None;
+
         public override string ToDisplayString() => this.Token.ToDisplayString(this.Sql);
     }
 }

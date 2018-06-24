@@ -13,6 +13,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlExpression Operand { get; }
 
+        public override bool IsValid => this.Operator.Kind != SqlKind.Unknown &&
+                                        this.Operand?.IsValid == true;
+
         public override string ToDisplayString() => $"{this.Operator.ToDisplayString(this.Sql)} {this.Operand.ToDisplayString()}";
     }
 }

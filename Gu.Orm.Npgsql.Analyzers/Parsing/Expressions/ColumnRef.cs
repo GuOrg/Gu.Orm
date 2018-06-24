@@ -10,6 +10,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlExpression Expression { get; }
 
+        public override bool IsValid => this.Expression?.IsValid != false;
+
         public override string ToDisplayString() => this.Expression?.ToDisplayString() ?? "<missing>";
     }
 }

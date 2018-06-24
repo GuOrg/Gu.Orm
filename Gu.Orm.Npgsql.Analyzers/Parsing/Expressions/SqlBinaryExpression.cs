@@ -16,6 +16,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlExpression Right { get; }
 
+        public override bool IsValid => this.Left?.IsValid == true &&
+                                        this.Left?.IsValid == true;
+
         public override string ToDisplayString()
         {
             return $"{this.Left.ToDisplayString()} {this.Operator.ToDisplayString(this.Sql)} {this.Right.ToDisplayString()}";

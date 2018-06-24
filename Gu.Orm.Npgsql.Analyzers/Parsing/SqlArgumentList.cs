@@ -13,6 +13,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public ImmutableArray<SqlArgument> Arguments { get; }
 
+        public override bool IsValid => this.Arguments.All(x => x?.IsValid == true);
+
         public override string ToDisplayString()
         {
             return string.Join(", ", this.Arguments.Select(x => x.ToDisplayString()));

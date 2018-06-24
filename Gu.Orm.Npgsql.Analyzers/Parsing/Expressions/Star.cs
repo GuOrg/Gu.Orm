@@ -12,6 +12,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlToken Token { get; }
 
+        public override bool IsValid => this.Token.Kind == SqlKind.Multiply;
+
         public override string ToDisplayString() => "*";
     }
 }

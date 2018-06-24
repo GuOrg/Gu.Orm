@@ -13,6 +13,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlName Alias { get; }
 
+        public override bool IsValid => this.Name?.IsValid == true &&
+                                        this.Alias?.IsValid != false;
+
         public override string ToDisplayString()
         {
             if (this.Alias != null)
