@@ -1,7 +1,9 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     using System.Collections.Immutable;
+    using System.Diagnostics;
 
+    [DebuggerDisplay("{this.ToDisplayString()}")]
     public abstract class SqlNode
     {
         protected readonly string Sql;

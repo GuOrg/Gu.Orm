@@ -2,6 +2,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using Gu.Roslyn.AnalyzerExtensions;
 
     public static partial class Parse
     {
@@ -74,16 +75,17 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 {
                     var start = position;
                     position++;
-                    while (TryPeek(sql, position, out var next) &&
+                    while (sql.TryElementAt(position, out var next) &&
                            char.IsDigit(next))
                     {
                         position++;
                     }
 
-                    if (TryMatch(sql, position, '.'))
+                    if (sql.TryElementAt(position, out var c) &&
+                        c == '.')
                     {
                         position++;
-                        while (TryPeek(sql, position, out var next) &&
+                        while (sql.TryElementAt(position, out var next) &&
                                char.IsDigit(next))
                         {
                             position++;
@@ -131,7 +133,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 {
                     var start = position;
                     position++;
-                    while (TryPeek(sql, position, out var next) &&
+                    while (sql.TryElementAt(position, out var next) &&
                            (char.IsLetterOrDigit(next) || next == '_'))
                     {
                         position++;
@@ -141,7 +143,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     return true;
                 }
 
-                if (TryMatch(sql, position, '"'))
+                if (sql.TryElementAt(position, out var c) &&
+                    c == '"')
                 {
                     var start = position;
                     position++;
@@ -202,7 +205,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
             internal static bool TryParse(string sql, int position, char expected, SqlKind kind, out RawToken token)
             {
-                if (TryMatch(sql, position, expected))
+                if (sql.TryElementAt(position, out var c) &&
+                    c == expected)
                 {
                     token = RawToken.SingleChar(kind, position);
                     return true;
@@ -233,20 +237,14 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 }
             }
 
-            private static bool TryMatch(string sql, int position, char expected)
-            {
-                return TryPeek(sql, position, out var c) &&
-                       c == expected;
-            }
-
             private static bool TryMatch(string sql, int position, string expected)
             {
-                if (TryPeek(sql, position, out var c) &&
+                if (sql.TryElementAt(position, out var c) &&
                     c == expected[0])
                 {
                     for (var i = 1; i < expected.Length; i++)
                     {
-                        if (!TryPeek(sql, position + i, out c) ||
+                        if (!sql.TryElementAt(position + i, out c) ||
                             expected[i] != c)
                         {
                             return false;
@@ -259,21 +257,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 return false;
             }
 
-            private static bool TryPeek(string sql, int position, out char c)
-            {
-                if (position < sql.Length)
-                {
-                    c = sql[position];
-                    return true;
-                }
-
-                c = default(char);
-                return false;
-            }
-
             private static bool SkipNext(string sql, char end, ref int position)
             {
-                while (TryPeek(sql, position, out var next))
+                while (sql.TryElementAt(position, out var next))
                 {
                     position++;
                     if (next == end)

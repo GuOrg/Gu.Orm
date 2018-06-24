@@ -2,6 +2,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using Gu.Orm.Npgsql.Analyzers.Helpers;
 
     /// <summary>
     /// https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html
@@ -48,6 +49,13 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             var tokens = Tokens(sql);
             var position = 0;
             return BinaryExpression(sql, tokens, ref position);
+        }
+
+        public static SqlParenthesizedExpression ParenthesizedExpression(string sql)
+        {
+            var tokens = Tokens(sql);
+            var position = 0;
+            return ParenthesizedExpression(sql, tokens, ref position);
         }
 
         public static SqlInvocation Invocation(string sql)
@@ -165,46 +173,67 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         private static SqlBinaryExpression BinaryExpression(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             var start = position;
-            var left = (SqlExpression)Literal(sql, tokens, ref position) ??
-                       (SqlExpression)Invocation(sql, tokens, ref position) ??
+            var left = (SqlExpression)Invocation(sql, tokens, ref position) ??
+                       (SqlExpression)ParenthesizedExpression(sql, tokens, ref position) ??
+                       (SqlExpression)Literal(sql, tokens, ref position) ??
                        (SqlExpression)Name(sql, tokens, ref position);
             if (left != null &&
-                position < tokens.Length)
+                tokens.TryElementAt(position, out var op) &&
+                IsBinaryOperator(op))
             {
-                var op = tokens[position];
-                if (IsBinaryOperator(op))
-                {
-                    position++;
-                    var right = (SqlExpression)Literal(sql, tokens, ref position) ??
-                               (SqlExpression)Invocation(sql, tokens, ref position) ??
-                               (SqlExpression)Name(sql, tokens, ref position);
-                    if (right != null)
-                    {
-                        return new SqlBinaryExpression(sql, left, op, right);
-                    }
-
-                    return new SqlBinaryExpression(sql, left, op, null);
-                }
+                position++;
+                var right = Expression(sql, tokens, ref position);
+                return new SqlBinaryExpression(sql, left, op, right);
             }
 
             position = start;
             return null;
 
-            bool IsBinaryOperator(RawToken candidate)
+            bool IsBinaryOperator(RawToken token)
             {
-                if (candidate.Kind.IsBinaryOperator())
+                if (token.Kind.IsBinaryOperator())
                 {
                     return true;
                 }
 
-                if (candidate.Kind is SqlKind.Identifier)
+                if (token.Kind is SqlKind.Identifier)
                 {
-                    return TryMatchKeyword(sql, candidate, "AND") ||
-                           TryMatchKeyword(sql, candidate, "OR");
+                    return TryMatchKeyword(sql, token, "AND") ||
+                           TryMatchKeyword(sql, token, "OR");
                 }
 
                 return false;
             }
+        }
+
+        private static SqlParenthesizedExpression ParenthesizedExpression(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        {
+            var start = position;
+            if (TryMatch(tokens, position, SqlKind.OpenParen, out var open))
+            {
+                position++;
+                if (Expression(sql, tokens, ref position) is SqlExpression expression)
+                {
+                    if (TryMatch(tokens, position, SqlKind.CloseParen, out var close))
+                    {
+                        position++;
+                        return new SqlParenthesizedExpression(sql, open, expression, close);
+                    }
+
+                    return new SqlParenthesizedExpression(sql, open, expression, RawToken.None);
+                }
+                else
+                {
+                    if (TryMatch(tokens, position, SqlKind.CloseParen, out var close))
+                    {
+                        position++;
+                        return new SqlParenthesizedExpression(sql, open, null, close);
+                    }
+                }
+            }
+
+            position = start;
+            return null;
         }
 
         private static SqlInvocation Invocation(string sql, ImmutableArray<RawToken> tokens, ref int position)
@@ -264,6 +293,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         private static SqlExpression Expression(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             return (SqlExpression)Invocation(sql, tokens, ref position) ??
+                   (SqlExpression)ParenthesizedExpression(sql, tokens, ref position) ??
                    (SqlExpression)BinaryExpression(sql, tokens, ref position) ??
                    (SqlExpression)Literal(sql, tokens, ref position) ??
                    (SqlExpression)Name(sql, tokens, ref position);
@@ -332,13 +362,10 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         private static bool TryMatch(ImmutableArray<RawToken> tokens, int position, SqlKind kind, out RawToken token)
         {
-            if (position < tokens.Length)
+            if (tokens.TryElementAt(position, out token) &&
+                token.Kind == kind)
             {
-                token = tokens[position];
-                if (token.Kind == kind)
-                {
-                    return true;
-                }
+                return true;
             }
 
             token = default(RawToken);
