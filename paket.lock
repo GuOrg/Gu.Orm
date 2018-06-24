@@ -16,7 +16,7 @@ NUGET
   remote: https://www.nuget.org/api/v2
     Gu.Analyzers (1.2.13-dev)
     IDisposableAnalyzers (2.0.2.2)
-    StyleCop.Analyzers (1.0.2)
+    StyleCop.Analyzers (1.1.0-beta008)
 
 GROUP Roslyn
 STORAGE: NONE

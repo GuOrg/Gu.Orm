@@ -23,5 +23,5 @@ group Analyzers
   source https://www.nuget.org/api/v2/
   storage: none
   nuget IDisposableAnalyzers
-  nuget Gu.Analyzers
-  nuget StyleCop.Analyzers
+  nuget Gu.Analyzers prerelease
+  nuget StyleCop.Analyzers prerelease
