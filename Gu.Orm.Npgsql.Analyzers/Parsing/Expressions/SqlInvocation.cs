@@ -26,7 +26,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public override string ToDisplayString()
         {
-            return $"{this.Name.ToDisplayString()}({this.ArgumentList?.ToDisplayString() ?? string.Empty})";
+            return $"{this.Name.ToDisplayString()}({this.ArgumentList?.ToDisplayString() ?? string.Empty}{this.CloseParen.ToDisplayString(this.Sql)}";
         }
     }
 }

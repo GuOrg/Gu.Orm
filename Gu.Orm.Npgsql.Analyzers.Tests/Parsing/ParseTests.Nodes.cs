@@ -46,6 +46,10 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("UPPER(word) AS upper_word")]
             [TestCase("UPPER(word) AS SELECT")]
             [TestCase("UPPER(word) AS \"SELECT\"")]
+            [TestCase("UPPER(CONCAT('a', 'b'))")]
+            [TestCase("UPPER(CONCAT('a', 'b')) as meh")]
+            [TestCase("UPPER(CONCAT('a', 'b', UPPER('c')))")]
+            [TestCase("UPPER(CONCAT('a', 'b', UPPER('c'))) as meh")]
             public void ResTarget(string sql)
             {
                 var node = Parse.ResTarget(sql);
@@ -118,6 +122,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("MOD(1, 2)")]
             [TestCase("UPPER(CONCAT('a', 'b'))")]
             [TestCase("UPPER(CONCAT('a', 'b', UPPER('c')))")]
+            [TestCase("CONCAT(1 <> 2, 1 = 2)")]
             public void Invocation(string sql)
             {
                 var node = Parse.Invocation(sql);
@@ -126,12 +131,20 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
                 AssertTree(node);
             }
 
-            [Explicit("Fix later")]
-            [TestCase("MOD(1,, 2)")]
-            public void InvocationInvalid(string sql)
+            [TestCase("1 <> 2")]
+            public void BinaryExpression(string sql)
+            {
+                var node = Parse.BinaryExpression(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
+                AssertTree(node);
+            }
+
+            [TestCase("MOD(1,, 2)", "MOD(1")]
+            public void InvocationInvalid(string sql, string expected)
             {
                 var node = Parse.Invocation(sql);
-                Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(expected, node.ToDisplayString());
                 Assert.AreEqual(false, node.IsValid);
                 AssertTree(node);
             }

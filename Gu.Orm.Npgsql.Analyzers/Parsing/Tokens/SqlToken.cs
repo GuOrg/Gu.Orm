@@ -20,6 +20,14 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public int Length => this.End - this.Start;
 
-        public string ToDisplayString(string sql) => sql.Substring(this.Start, this.Length);
+        public string ToDisplayString(string sql)
+        {
+            if (this.Start < 0)
+            {
+                return string.Empty;
+            }
+
+            return sql.Substring(this.Start, this.Length);
+        }
     }
 }
