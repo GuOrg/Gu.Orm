@@ -4,6 +4,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
     {
         Unknown,
         Identifier,
+        QuotedIdentifier,
         String,
         Integer,
         Float,

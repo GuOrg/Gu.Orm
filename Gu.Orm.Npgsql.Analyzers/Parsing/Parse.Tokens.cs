@@ -1,4 +1,4 @@
-﻿namespace Gu.Orm.Npgsql.Analyzers.Parsing
+namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
@@ -145,8 +145,8 @@
                     var start = position;
                     position++;
                     token = SkipNext(sql, '"', ref position)
-                        ? new RawToken(SqlKind.Identifier, start, position)
-                        : new RawToken(SqlKind.Identifier, start, sql.Length);
+                        ? new RawToken(SqlKind.QuotedIdentifier, start, position)
+                        : new RawToken(SqlKind.QuotedIdentifier, start, sql.Length);
 
                     return true;
                 }
