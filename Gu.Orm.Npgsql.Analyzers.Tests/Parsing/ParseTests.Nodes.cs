@@ -70,6 +70,17 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
                 AssertTree(node);
             }
 
+            [TestCase("NOW()")]
+            [TestCase("MAX(foo)")]
+            [TestCase("MAX(foo.bar)")]
+            [TestCase("MOD(1, 2)")]
+            public void Invocation(string sql)
+            {
+                var node = Parse.Invocation(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                AssertTree(node);
+            }
+
             private static void AssertTree(SqlNode node)
             {
                 foreach (var property in node.GetType().GetProperties().Where(x => x.PropertyType == typeof(SqlToken)))
