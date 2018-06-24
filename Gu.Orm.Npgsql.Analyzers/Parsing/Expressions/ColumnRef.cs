@@ -1,6 +1,6 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    public class ColumnRef : SqlNode
+    public class ColumnRef : SqlExpression
     {
         public ColumnRef(string sql, SqlExpression expression)
             : base(sql, CreateChildren(expression))

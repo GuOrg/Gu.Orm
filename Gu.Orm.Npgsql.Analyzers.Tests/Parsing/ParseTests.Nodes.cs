@@ -9,6 +9,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
         public class Nodes
         {
             [TestCase("*")]
+            [TestCase("1")]
+            [TestCase("1, 2")]
             [TestCase("foo")]
             [TestCase("foo, bar")]
             [TestCase("bar AS meh")]
@@ -29,6 +31,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             }
 
             [TestCase("*")]
+            [TestCase("1")]
             [TestCase("bar")]
             [TestCase("bar AS meh")]
             [TestCase("\"Bar\"")]
@@ -53,6 +56,16 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             public void ColumnRef(string sql)
             {
                 var node = Parse.ColumnRef(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                AssertTree(node);
+            }
+
+            [TestCase("1")]
+            [TestCase("1.2")]
+            [TestCase("'abc'")]
+            public void Literal(string sql)
+            {
+                var node = Parse.Literal(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
                 AssertTree(node);
             }

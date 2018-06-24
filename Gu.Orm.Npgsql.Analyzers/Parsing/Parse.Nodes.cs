@@ -26,6 +26,13 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return ColumnRef(sql, tokens, ref position);
         }
 
+        public static SqlNode Literal(string sql)
+        {
+            var tokens = Tokens(sql);
+            var position = 0;
+            return Literal(sql, tokens, ref position);
+        }
+
         private static TargetList TargetList(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             var targets = new List<ResTarget>();
@@ -49,22 +56,43 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         {
             if (ColumnRef(sql, tokens, ref position) is ColumnRef columnRef)
             {
-                if (TryMatchKeyword(tokens, position, sql, "AS", out var @as))
+                if (TryAs(sql, tokens, ref position, out var @as, out var name))
                 {
-                    position++;
-                    if (TryMatch(tokens, position, SqlKind.Identifier, out var name))
-                    {
-                        position++;
-                        return new ResTarget(sql, columnRef, @as, new SqlIdentifierName(sql, name));
-                    }
-
-                    return null;
+                    return new ResTarget(sql, columnRef, @as, name);
                 }
 
                 return new ResTarget(sql, columnRef, RawToken.None, null);
             }
 
+            if (Literal(sql, tokens, ref position) is SqlLiteralExpression literal)
+            {
+                if (TryAs(sql, tokens, ref position, out var @as, out var name))
+                {
+                    return new ResTarget(sql, literal, @as, name);
+                }
+
+                return new ResTarget(sql, literal, RawToken.None, null);
+            }
+
             return null;
+        }
+
+        private static bool TryAs(string sql, ImmutableArray<RawToken> tokens, ref int position, out RawToken @as, out SqlIdentifierName name)
+        {
+            name = null;
+            if (TryMatchKeyword(sql, tokens, position, "AS", out @as))
+            {
+                position++;
+                if (TryMatch(tokens, position, SqlKind.Identifier, out var nameToken))
+                {
+                    position++;
+                    name = new SqlIdentifierName(sql, nameToken);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         private static ColumnRef ColumnRef(string sql, ImmutableArray<RawToken> tokens, ref int position)
@@ -96,6 +124,19 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return null;
         }
 
+        private static SqlNode Literal(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        {
+            if (TryMatch(tokens, position, SqlKind.Integer, out var token) ||
+                TryMatch(tokens, position, SqlKind.Float, out token) ||
+                TryMatch(tokens, position, SqlKind.String, out token))
+            {
+                position++;
+                return new SqlLiteralExpression(sql, token);
+            }
+
+            return null;
+        }
+
         private static bool TryMatch(ImmutableArray<RawToken> tokens, int position, SqlKind kind, out RawToken token)
         {
             if (position < tokens.Length)
@@ -111,7 +152,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return false;
         }
 
-        private static bool TryMatchKeyword(ImmutableArray<RawToken> tokens, int position, string sql, string keyWord, out RawToken token)
+        private static bool TryMatchKeyword(string sql, ImmutableArray<RawToken> tokens, int position, string keyWord, out RawToken token)
         {
             if (TryMatch(tokens, position, SqlKind.Identifier, out token) &&
                 token.Length == keyWord.Length)
