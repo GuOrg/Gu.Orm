@@ -1,4 +1,4 @@
-namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
+﻿namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
 {
     using System.Linq;
     using Gu.Orm.Npgsql.Analyzers.Parsing;
@@ -37,7 +37,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("SELECT \"Bar\"\r\nFROM foo", "Identifier: SELECT Identifier: \"Bar\" Identifier: FROM Identifier: foo")]
             [TestCase("SELECT * FROM foos", "Identifier: SELECT Multiply: * Identifier: FROM Identifier: foos")]
             [TestCase("select f.bar, f.baz from foos f", "Identifier: select Identifier: f Point: . Identifier: bar Comma: , Identifier: f Point: . Identifier: baz Identifier: from Identifier: foos Identifier: f")]
-            [TestCase("select * from t match_recognize (  order by run_date  pattern ( anything )   define    anything as run_date = run_date);", "Identifier: select Multiply: * Identifier: from Identifier: t Identifier: match_recognize OpenParens: ( Identifier: order Identifier: by Identifier: run_date Identifier: pattern OpenParens: ( Identifier: anything CloseParens: ) Identifier: define Identifier: anything Identifier: as Identifier: run_date Equal: = Identifier: run_date CloseParens: ) Semicolon: ;")]
+            [TestCase("select * from t match_recognize (  order by run_date  pattern ( anything )   define    anything as run_date = run_date);", "Identifier: select Multiply: * Identifier: from Identifier: t Identifier: match_recognize OpenParen: ( Identifier: order Identifier: by Identifier: run_date Identifier: pattern OpenParen: ( Identifier: anything CloseParen: ) Identifier: define Identifier: anything Identifier: as Identifier: run_date Equal: = Identifier: run_date CloseParen: ) Semicolon: ;")]
             public void Valid(string sql, string expected)
             {
                 var tokens = Parse.Tokens(sql);

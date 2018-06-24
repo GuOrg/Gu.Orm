@@ -1,4 +1,4 @@
-﻿namespace Gu.Orm.Npgsql.Analyzers.Parsing
+namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     public enum SqlKind
     {
@@ -28,8 +28,8 @@
         Point,
         Semicolon,
         Colon,
-        OpenParens,
-        CloseParens,
+        OpenParen,
+        CloseParen,
         OpenBracket,
         CloseBracket,
         Comment,

@@ -1,4 +1,4 @@
-namespace Gu.Orm.Npgsql.Analyzers.Parsing
+﻿namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
     using System.Collections.Generic;
     using System.Collections.Immutable;
@@ -43,8 +43,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     TokenParser.TryParse(sql, position, '=', SqlKind.Equal, out token) ||
                     TokenParser.TryParse(sql, position, '<', SqlKind.LessThan, out token) ||
                     TokenParser.TryParse(sql, position, '>', SqlKind.GreaterThan, out token) ||
-                    TokenParser.TryParse(sql, position, '(', SqlKind.OpenParens, out token) ||
-                    TokenParser.TryParse(sql, position, ')', SqlKind.CloseParens, out token) ||
+                    TokenParser.TryParse(sql, position, '(', SqlKind.OpenParen, out token) ||
+                    TokenParser.TryParse(sql, position, ')', SqlKind.CloseParen, out token) ||
                     TokenParser.TryParse(sql, position, '[', SqlKind.OpenBracket, out token) ||
                     TokenParser.TryParse(sql, position, ']', SqlKind.CloseBracket, out token) ||
                     TokenParser.TryParse(sql, position, '.', SqlKind.Point, out token) ||

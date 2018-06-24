@@ -3,8 +3,18 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
     using System.Collections.Generic;
     using System.Collections.Immutable;
 
+    /// <summary>
+    /// https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html
+    /// </summary>
     public static partial class Parse
     {
+        public static RangeVar RangeVar(string sql)
+        {
+            var tokens = Tokens(sql);
+            var position = 0;
+            return RangeVar(sql, tokens, ref position);
+        }
+
         public static TargetList TargetList(string sql)
         {
             var tokens = Tokens(sql);
@@ -38,6 +48,25 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             var tokens = Tokens(sql);
             var position = 0;
             return Invocation(sql, tokens, ref position);
+        }
+
+        private static RangeVar RangeVar(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        {
+            var start = position;
+            if (Name(sql, tokens, ref position) is SqlNameSyntax name)
+            {
+                if (TryMatch(tokens, position, SqlKind.Identifier, out var next) &&
+                    !TryMatchKeyword(sql, tokens, position, "WHERE", out _))
+                {
+                    position++;
+                    return new RangeVar(sql, name, new SqlIdentifierName(sql, next));
+                }
+
+                return new RangeVar(sql, name, null);
+            }
+
+            position = start;
+            return null;
         }
 
         private static TargetList TargetList(string sql, ImmutableArray<RawToken> tokens, ref int position)
@@ -94,7 +123,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
             var start = position;
             if (Name(sql, tokens, ref position) is SqlNameSyntax name &&
-                !TryMatch(tokens, position, SqlKind.OpenParens, out _))
+                !TryMatch(tokens, position, SqlKind.OpenParen, out _))
             {
                 return new ColumnRef(sql, name);
             }
@@ -120,15 +149,15 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         {
             var start = position;
             if (Name(sql, tokens, ref position) is SqlNameSyntax name &&
-                TryMatch(tokens, position, SqlKind.OpenParens, out _))
+                TryMatch(tokens, position, SqlKind.OpenParen, out var openParen))
             {
                 position++;
                 List<SqlArgument> arguments = null;
                 while (true)
                 {
-                    if (TryMatch(tokens, position, SqlKind.CloseParens, out _))
+                    if (TryMatch(tokens, position, SqlKind.CloseParen, out var closeParen))
                     {
-                        return new SqlInvocation(sql, name, arguments == null ? null : new SqlArgumentList(sql, arguments.ToImmutableArray()));
+                        return new SqlInvocation(sql, name, openParen, arguments == null ? null : new SqlArgumentList(sql, arguments.ToImmutableArray()), closeParen);
                     }
 
                     if (Argument(sql, tokens, ref position) is SqlArgument argument)
@@ -159,7 +188,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         {
             var start = position;
             if (Expression(sql, tokens, ref position) is SqlExpression expression &&
-                (TryMatch(tokens, position, SqlKind.CloseParens, out _) ||
+                (TryMatch(tokens, position, SqlKind.CloseParen, out _) ||
                  TryMatch(tokens, position, SqlKind.Comma, out _)))
             {
                 return new SqlArgument(sql, expression);

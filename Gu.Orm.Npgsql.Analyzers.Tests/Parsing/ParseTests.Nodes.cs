@@ -48,6 +48,19 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
                 AssertTree(node);
             }
 
+            [TestCase("foo")]
+            [TestCase("foo f")]
+            [TestCase("foo.bar")]
+            [TestCase("foo.bar b")]
+            [TestCase("foo.\"Bar\"")]
+            [TestCase("foo.\"Bar\" b")]
+            public void RangeVar(string sql)
+            {
+                var node = Parse.RangeVar(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                AssertTree(node);
+            }
+
             [TestCase("*")]
             [TestCase("bar")]
             [TestCase("\"Bar\"")]
