@@ -188,7 +188,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             //// ReSharper restore RedundantCast
             if (left != null &&
                 tokens.TryElementAt(position, out var candidate) &&
-                TryBinaryOperator(out var binaryOperator))
+                TryGetOperator(out var binaryOperator))
             {
                 position++;
                 var right = Expression(sql, tokens, ref position);
@@ -208,7 +208,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             position = start;
             return null;
 
-            bool TryBinaryOperator(out RawToken result)
+            bool TryGetOperator(out RawToken result)
             {
                 switch (candidate.Kind)
                 {
@@ -302,7 +302,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         {
             var start = position;
             if (tokens.TryElementAt(position, out var candidate) &&
-                TryUnaryOperator(out var token))
+                TryGetOperator(out var token))
             {
                 position++;
                 if (Expression(sql, tokens, ref position) is SqlExpression operand)
@@ -314,7 +314,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             position = start;
             return null;
 
-            bool TryUnaryOperator(out RawToken result)
+            bool TryGetOperator(out RawToken result)
             {
                 switch (candidate.Kind)
                 {
@@ -338,7 +338,6 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 result = default;
                 return false;
             }
-
         }
 
         private static SqlParenthesizedExpression ParenthesizedExpression(string sql, ImmutableArray<RawToken> tokens, ref int position)
