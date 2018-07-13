@@ -181,29 +181,50 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             //// ReSharper restore RedundantCast
             if (left != null &&
                 tokens.TryElementAt(position, out var op) &&
-                IsBinaryOperator(op))
+                TryBinaryOperator(op, out var binaryOperator))
             {
                 position++;
                 var right = Expression(sql, tokens, ref position);
-                return new SqlBinaryExpression(sql, left, op, right);
+                if (right is SqlBinaryExpression binary &&
+                    binaryOperator.Kind.Precedence() < binary.Operator.Kind.Precedence())
+                {
+                    return new SqlBinaryExpression(
+                        sql,
+                        new SqlBinaryExpression(sql, left, binaryOperator, binary.Left),
+                        new RawToken(binary.Operator.Kind, binary.Operator.Start, binary.Operator.End),
+                        binary.Right);
+                }
+
+                return new SqlBinaryExpression(sql, left, binaryOperator, right);
             }
 
             position = start;
             return null;
 
-            bool IsBinaryOperator(RawToken token)
+            bool TryBinaryOperator(RawToken token, out RawToken result)
             {
                 if (token.Kind.IsBinaryOperator())
                 {
+                    result = token;
                     return true;
                 }
 
                 if (token.Kind is SqlKind.Identifier)
                 {
-                    return TryMatchKeyword(sql, token, "AND") ||
-                           TryMatchKeyword(sql, token, "OR");
+                    if (TryMatchKeyword(sql, token, "AND"))
+                    {
+                        result = new RawToken(SqlKind.AndKeyword, token.Start, token.End);
+                        return true;
+                    }
+
+                    if (TryMatchKeyword(sql, token, "OR"))
+                    {
+                        result = new RawToken(SqlKind.OrKeyword, token.Start, token.End);
+                        return true;
+                    }
                 }
 
+                result = default;
                 return false;
             }
         }

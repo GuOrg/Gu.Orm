@@ -44,7 +44,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 case SqlKind.LessThanLessThanToken:
                 case SqlKind.GreaterThanGreaterThanToken:
                 case SqlKind.EqualsToken:
-                case SqlKind.NotEqualToken:
+                case SqlKind.NotEqualsToken:
                 case SqlKind.LessThanToken:
                 case SqlKind.LessThanEqualsToken:
                 case SqlKind.GreaterThanToken:
@@ -52,6 +52,50 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     return true;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
+            }
+        }
+
+        /// <summary>
+        /// https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html#SQL-PRECEDENCE
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        public static int Precedence(this SqlKind kind)
+        {
+            switch (kind)
+            {
+                case SqlKind.ExponentToken:
+                    return 0;
+                case SqlKind.AsteriskToken:
+                case SqlKind.SlashToken:
+                case SqlKind.PercentToken:
+                    return 1;
+                case SqlKind.PlusToken:
+                case SqlKind.MinusToken:
+                    return 2;
+                case SqlKind.ExclamationToken:
+                case SqlKind.AmpersandToken:
+                case SqlKind.BarToken:
+                case SqlKind.HashToken:
+                case SqlKind.TildeToken:
+                case SqlKind.LessThanLessThanToken:
+                case SqlKind.GreaterThanGreaterThanToken:
+                    return 4;
+                case SqlKind.LessThanToken:
+                case SqlKind.LessThanEqualsToken:
+                case SqlKind.GreaterThanToken:
+                case SqlKind.GreaterThanEqualsToken:
+                case SqlKind.EqualsToken:
+                case SqlKind.NotEqualsToken:
+                    return 5;
+                case SqlKind.NotKeyword:
+                    return 6;
+                case SqlKind.AndKeyword:
+                    return 7;
+                case SqlKind.OrKeyword:
+                    return 8;
+                default:
+                    return 3;
             }
         }
     }

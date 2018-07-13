@@ -22,7 +22,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     TokenParser.TryParseString(sql, position, out token) ||
                     TokenParser.TryParseComment(sql, position, out token) ||
                     TokenParser.TryParseIdentifier(sql, position, out token) ||
-                    TokenParser.TryParse(sql, position, "<>", SqlKind.NotEqualToken, out token) ||
+                    TokenParser.TryParse(sql, position, "<>", SqlKind.NotEqualsToken, out token) ||
                     TokenParser.TryParse(sql, position, "<=", SqlKind.LessThanEqualsToken, out token) ||
                     TokenParser.TryParse(sql, position, ">=", SqlKind.GreaterThanEqualsToken, out token) ||
                     TokenParser.TryParse(sql, position, "|/", SqlKind.SquareRootToken, out token) ||

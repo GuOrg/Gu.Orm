@@ -148,7 +148,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
 
             [TestCase("a = b AND c <> d", "a = b", "c <> d")]
             [TestCase("a OR b AND c", "a", "b AND c")]
-            [TestCase("a AND b OR c", "a AND B", "c")]
+            [TestCase("a AND b OR c", "a AND b", "c")]
             public void BinaryExpressionPrecedence(string sql, string left, string right)
             {
                 var node = Parse.BinaryExpression(sql);

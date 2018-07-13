@@ -24,7 +24,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("1 | 2", "Integer: 1 BarToken: | Integer: 2")]
             [TestCase("1 # 2", "Integer: 1 HashToken: # Integer: 2")]
             [TestCase("~ 2", "TildeToken: ~ Integer: 2")]
-            [TestCase("1 <> 2", "Integer: 1 NotEqualToken: <> Integer: 2")]
+            [TestCase("1 <> 2", "Integer: 1 NotEqualsToken: <> Integer: 2")]
             [TestCase("1 << 2", "Integer: 1 LessThanLessThanToken: << Integer: 2")]
             [TestCase("1 >> 2", "Integer: 1 GreaterThanGreaterThanToken: >> Integer: 2")]
             [TestCase("-- SELECT 'abc'", "Comment: -- SELECT 'abc'")]

@@ -44,7 +44,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing.Tokens
             new TestCaseData(SqlKind.LessThanLessThanToken, true),
             new TestCaseData(SqlKind.GreaterThanGreaterThanToken, true),
             new TestCaseData(SqlKind.EqualsToken, true),
-            new TestCaseData(SqlKind.NotEqualToken, true),
+            new TestCaseData(SqlKind.NotEqualsToken, true),
             new TestCaseData(SqlKind.LessThanToken, true),
             new TestCaseData(SqlKind.LessThanEqualsToken, true),
             new TestCaseData(SqlKind.GreaterThanToken, true),

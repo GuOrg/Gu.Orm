@@ -29,7 +29,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         OpenBracketToken,
         CloseBracketToken,
         EqualsToken,
-        NotEqualToken,
+        NotEqualsToken,
         LessThanToken,
         LessThanEqualsToken,
         GreaterThanToken,
@@ -42,5 +42,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         Integer,
         Float,
         None,
+        NotKeyword,
+        AndKeyword,
+        OrKeyword
     }
 }
