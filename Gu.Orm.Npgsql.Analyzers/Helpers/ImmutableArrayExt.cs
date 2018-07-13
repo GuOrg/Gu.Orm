@@ -13,7 +13,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Helpers
                 return true;
             }
 
-            item = default(T);
+            item = default;
             return false;
         }
     }

@@ -5,7 +5,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
     public static class Keywords
     {
         /// <summary>
-        /// SELECT word FROM pg_get_keywords() WHERE catcode = 'R'
+        /// SELECT word FROM pg_get_keywords() WHERE catcode = 'R'.
         /// </summary>
         public static ImmutableArray<string> Reserved = ImmutableArray.Create(
             "ALL",

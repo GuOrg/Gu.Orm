@@ -1,4 +1,4 @@
-﻿namespace Gu.Orm.Npgsql
+namespace Gu.Orm.Npgsql
 {
     using System;
     using System.Collections.Generic;
@@ -24,7 +24,7 @@
                 }
             }
 
-            result = default(T);
+            result = default;
             return false;
         }
 

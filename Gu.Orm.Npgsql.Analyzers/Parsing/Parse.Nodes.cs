@@ -353,7 +353,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             if (TryMatchKeyword(sql, tokens, position, "AS", out @as))
             {
                 position++;
-                if (SqlSimpleName(sql, tokens, ref position, true) is SqlSimpleName simpleName)
+                if (SqlSimpleName(sql, tokens, ref position, allowKeyword: true) is SqlSimpleName simpleName)
                 {
                     name = simpleName;
                 }
@@ -372,7 +372,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 return true;
             }
 
-            token = default(RawToken);
+            token = default;
             return false;
         }
 
@@ -402,7 +402,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 return true;
             }
 
-            token = default(RawToken);
+            token = default;
             return false;
         }
 

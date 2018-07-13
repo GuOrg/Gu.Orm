@@ -101,7 +101,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     return true;
                 }
 
-                token = default(RawToken);
+                token = default;
                 return false;
             }
 
@@ -123,7 +123,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     return true;
                 }
 
-                token = default(RawToken);
+                token = default;
                 return false;
             }
 
@@ -155,7 +155,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     return true;
                 }
 
-                token = default(RawToken);
+                token = default;
                 return false;
             }
 
@@ -199,7 +199,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     return true;
                 }
 
-                token = default(RawToken);
+                token = default;
                 return false;
             }
 
@@ -212,7 +212,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     return true;
                 }
 
-                token = default(RawToken);
+                token = default;
                 return false;
             }
 
@@ -224,7 +224,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     return true;
                 }
 
-                token = default(RawToken);
+                token = default;
                 return false;
             }
 
