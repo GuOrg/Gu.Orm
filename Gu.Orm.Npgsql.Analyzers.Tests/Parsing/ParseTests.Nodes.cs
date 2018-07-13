@@ -95,21 +95,21 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
                 SqlNodeAssert.Tree(node);
             }
 
-            [TestCase("@id")]
-            public void Parameter(string sql)
-            {
-                var node = Parse.Parameter(sql);
-                Assert.AreEqual(sql, node.ToDisplayString());
-                Assert.AreEqual(true, node.IsValid);
-                SqlNodeAssert.Tree(node);
-            }
-
             [TestCase("foo.")]
             public void ColumnRefInvalid(string sql)
             {
                 var node = Parse.ColumnRef(sql);
                 Assert.AreEqual(sql, node.ToDisplayString());
                 Assert.AreEqual(false, node.IsValid);
+                SqlNodeAssert.Tree(node);
+            }
+
+            [TestCase("@id")]
+            public void Parameter(string sql)
+            {
+                var node = Parse.Parameter(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
                 SqlNodeAssert.Tree(node);
             }
 
