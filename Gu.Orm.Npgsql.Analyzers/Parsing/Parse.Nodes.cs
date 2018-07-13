@@ -90,7 +90,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             while (ResTarget(sql, tokens, ref position) is ResTarget target)
             {
                 targets.Add(target);
-                if (TryMatch(tokens, position, SqlKind.Comma, out _))
+                if (TryMatch(tokens, position, SqlKind.CommaToken, out _))
                 {
                     position++;
                 }
@@ -140,7 +140,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         private static ColumnRef ColumnRef(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
-            if (TryMatch(tokens, position, SqlKind.Multiply, out var token))
+            if (TryMatch(tokens, position, SqlKind.AsteriskToken, out var token))
             {
                 position++;
                 return new ColumnRef(sql, new Star(sql, token));
@@ -148,7 +148,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
             var start = position;
             if (Name(sql, tokens, ref position) is SqlName name &&
-                !TryMatch(tokens, position, SqlKind.OpenParen, out _))
+                !TryMatch(tokens, position, SqlKind.OpenParenToken, out _))
             {
                 return new ColumnRef(sql, name);
             }
@@ -211,12 +211,12 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         private static SqlParenthesizedExpression ParenthesizedExpression(string sql, ImmutableArray<RawToken> tokens, ref int position)
         {
             var start = position;
-            if (TryMatch(tokens, position, SqlKind.OpenParen, out var open))
+            if (TryMatch(tokens, position, SqlKind.OpenParenToken, out var open))
             {
                 position++;
                 if (Expression(sql, tokens, ref position) is SqlExpression expression)
                 {
-                    if (TryMatch(tokens, position, SqlKind.CloseParen, out var close))
+                    if (TryMatch(tokens, position, SqlKind.CloseParenToken, out var close))
                     {
                         position++;
                         return new SqlParenthesizedExpression(sql, open, expression, close);
@@ -226,7 +226,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 }
                 else
                 {
-                    if (TryMatch(tokens, position, SqlKind.CloseParen, out var close))
+                    if (TryMatch(tokens, position, SqlKind.CloseParenToken, out var close))
                     {
                         position++;
                         return new SqlParenthesizedExpression(sql, open, null, close);
@@ -242,13 +242,13 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         {
             var start = position;
             if (Name(sql, tokens, ref position) is SqlName name &&
-                TryMatch(tokens, position, SqlKind.OpenParen, out var openParen))
+                TryMatch(tokens, position, SqlKind.OpenParenToken, out var openParen))
             {
                 position++;
                 List<SqlArgument> arguments = null;
                 while (true)
                 {
-                    if (TryMatch(tokens, position, SqlKind.CloseParen, out var closeParen))
+                    if (TryMatch(tokens, position, SqlKind.CloseParenToken, out var closeParen))
                     {
                         position++;
                         return new SqlInvocation(sql, name, openParen, arguments == null ? null : new SqlArgumentList(sql, arguments.ToImmutableArray()), closeParen);
@@ -262,7 +262,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                         }
 
                         arguments.Add(argument);
-                        if (TryMatch(tokens, position, SqlKind.Comma, out _))
+                        if (TryMatch(tokens, position, SqlKind.CommaToken, out _))
                         {
                             position++;
                         }
@@ -282,8 +282,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         {
             var start = position;
             if (Expression(sql, tokens, ref position) is SqlExpression expression &&
-                (TryMatch(tokens, position, SqlKind.CloseParen, out _) ||
-                 TryMatch(tokens, position, SqlKind.Comma, out _)))
+                (TryMatch(tokens, position, SqlKind.CloseParenToken, out _) ||
+                 TryMatch(tokens, position, SqlKind.CommaToken, out _)))
             {
                 return new SqlArgument(sql, expression);
             }
@@ -307,7 +307,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         {
             if (SqlSimpleName(sql, tokens, ref position, allowKeyword: true) is SqlSimpleName simpleName)
             {
-                if (TryMatch(tokens, position, SqlKind.Point, out var point))
+                if (TryMatch(tokens, position, SqlKind.DotToken, out var point))
                 {
                     position++;
                     if (SqlSimpleName(sql, tokens, ref position, allowKeyword: true) is SqlSimpleName name)

@@ -14,41 +14,41 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 case SqlKind.String:
                 case SqlKind.Integer:
                 case SqlKind.Float:
-                case SqlKind.FactorialPrefix:
-                case SqlKind.Abs:
-                case SqlKind.Comma:
-                case SqlKind.Point:
-                case SqlKind.Semicolon:
-                case SqlKind.Colon:
-                case SqlKind.OpenParen:
-                case SqlKind.CloseParen:
-                case SqlKind.OpenBracket:
-                case SqlKind.CloseBracket:
+                case SqlKind.ExclamationExclamationToken:
+                case SqlKind.AtToken:
+                case SqlKind.CommaToken:
+                case SqlKind.DotToken:
+                case SqlKind.SemicolonToken:
+                case SqlKind.ColonToken:
+                case SqlKind.OpenParenToken:
+                case SqlKind.CloseParenToken:
+                case SqlKind.OpenBracketToken:
+                case SqlKind.CloseBracketToken:
                 case SqlKind.Comment:
                 case SqlKind.BlockComment:
                 case SqlKind.None:
                     return false;
-                case SqlKind.Add:
-                case SqlKind.Subtract:
-                case SqlKind.Multiply:
-                case SqlKind.Divide:
-                case SqlKind.Exponent:
-                case SqlKind.Modulo:
-                case SqlKind.SquareRoot:
-                case SqlKind.CubeRoot:
-                case SqlKind.Factorial:
-                case SqlKind.BitwiseAnd:
-                case SqlKind.BitwiseOr:
-                case SqlKind.BitwiseXor:
-                case SqlKind.BitwiseNot:
-                case SqlKind.BitwiseShiftLeft:
-                case SqlKind.BitwiseShiftRight:
-                case SqlKind.Equal:
-                case SqlKind.NotEqual:
-                case SqlKind.LessThan:
-                case SqlKind.LessThanOrEqual:
-                case SqlKind.GreaterThan:
-                case SqlKind.GreaterThanOrEqual:
+                case SqlKind.PlusToken:
+                case SqlKind.MinusToken:
+                case SqlKind.AsteriskToken:
+                case SqlKind.SlashToken:
+                case SqlKind.ExponentToken:
+                case SqlKind.PercentToken:
+                case SqlKind.SquareRootToken:
+                case SqlKind.CubeRootToken:
+                case SqlKind.ExclamationToken:
+                case SqlKind.AmpersandToken:
+                case SqlKind.BarToken:
+                case SqlKind.HashToken:
+                case SqlKind.TildeToken:
+                case SqlKind.LessThanLessThanToken:
+                case SqlKind.GreaterThanGreaterThanToken:
+                case SqlKind.EqualsToken:
+                case SqlKind.NotEqualToken:
+                case SqlKind.LessThanToken:
+                case SqlKind.LessThanEqualsToken:
+                case SqlKind.GreaterThanToken:
+                case SqlKind.GreaterThanEqualsToken:
                     return true;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(kind), kind, null);

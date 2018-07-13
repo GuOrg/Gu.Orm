@@ -17,7 +17,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         public SqlSimpleName Identifier { get; }
 
         public override bool IsValid => this.Prefix?.IsValid == true &&
-                                        this.Dot.Kind == SqlKind.Point &&
+                                        this.Dot.Kind == SqlKind.DotToken &&
                                         this.Identifier?.IsValid == true;
 
         public override string ToDisplayString()

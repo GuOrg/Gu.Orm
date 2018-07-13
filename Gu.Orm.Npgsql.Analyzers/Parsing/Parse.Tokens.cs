@@ -22,37 +22,37 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     TokenParser.TryParseString(sql, position, out token) ||
                     TokenParser.TryParseComment(sql, position, out token) ||
                     TokenParser.TryParseIdentifier(sql, position, out token) ||
-                    TokenParser.TryParse(sql, position, "<>", SqlKind.NotEqual, out token) ||
-                    TokenParser.TryParse(sql, position, "<=", SqlKind.LessThanOrEqual, out token) ||
-                    TokenParser.TryParse(sql, position, ">=", SqlKind.GreaterThanOrEqual, out token) ||
-                    TokenParser.TryParse(sql, position, "|/", SqlKind.SquareRoot, out token) ||
-                    TokenParser.TryParse(sql, position, "||/", SqlKind.CubeRoot, out token) ||
-                    TokenParser.TryParse(sql, position, "!!", SqlKind.FactorialPrefix, out token) ||
-                    TokenParser.TryParse(sql, position, "<<", SqlKind.BitwiseShiftLeft, out token) ||
-                    TokenParser.TryParse(sql, position, ">>", SqlKind.BitwiseShiftRight, out token) ||
-                    TokenParser.TryParse(sql, position, '+', SqlKind.Add, out token) ||
-                    TokenParser.TryParse(sql, position, '-', SqlKind.Subtract, out token) ||
-                    TokenParser.TryParse(sql, position, '*', SqlKind.Multiply, out token) ||
-                    TokenParser.TryParse(sql, position, '/', SqlKind.Divide, out token) ||
-                    TokenParser.TryParse(sql, position, '^', SqlKind.Exponent, out token) ||
-                    TokenParser.TryParse(sql, position, '%', SqlKind.Modulo, out token) ||
-                    TokenParser.TryParse(sql, position, '@', SqlKind.Abs, out token) ||
-                    TokenParser.TryParse(sql, position, '!', SqlKind.Factorial, out token) ||
-                    TokenParser.TryParse(sql, position, '&', SqlKind.BitwiseAnd, out token) ||
-                    TokenParser.TryParse(sql, position, '|', SqlKind.BitwiseOr, out token) ||
-                    TokenParser.TryParse(sql, position, '#', SqlKind.BitwiseXor, out token) ||
-                    TokenParser.TryParse(sql, position, '~', SqlKind.BitwiseNot, out token) ||
-                    TokenParser.TryParse(sql, position, '=', SqlKind.Equal, out token) ||
-                    TokenParser.TryParse(sql, position, '<', SqlKind.LessThan, out token) ||
-                    TokenParser.TryParse(sql, position, '>', SqlKind.GreaterThan, out token) ||
-                    TokenParser.TryParse(sql, position, '(', SqlKind.OpenParen, out token) ||
-                    TokenParser.TryParse(sql, position, ')', SqlKind.CloseParen, out token) ||
-                    TokenParser.TryParse(sql, position, '[', SqlKind.OpenBracket, out token) ||
-                    TokenParser.TryParse(sql, position, ']', SqlKind.CloseBracket, out token) ||
-                    TokenParser.TryParse(sql, position, '.', SqlKind.Point, out token) ||
-                    TokenParser.TryParse(sql, position, ',', SqlKind.Comma, out token) ||
-                    TokenParser.TryParse(sql, position, ';', SqlKind.Semicolon, out token) ||
-                    TokenParser.TryParse(sql, position, ':', SqlKind.Colon, out token))
+                    TokenParser.TryParse(sql, position, "<>", SqlKind.NotEqualToken, out token) ||
+                    TokenParser.TryParse(sql, position, "<=", SqlKind.LessThanEqualsToken, out token) ||
+                    TokenParser.TryParse(sql, position, ">=", SqlKind.GreaterThanEqualsToken, out token) ||
+                    TokenParser.TryParse(sql, position, "|/", SqlKind.SquareRootToken, out token) ||
+                    TokenParser.TryParse(sql, position, "||/", SqlKind.CubeRootToken, out token) ||
+                    TokenParser.TryParse(sql, position, "!!", SqlKind.ExclamationExclamationToken, out token) ||
+                    TokenParser.TryParse(sql, position, "<<", SqlKind.LessThanLessThanToken, out token) ||
+                    TokenParser.TryParse(sql, position, ">>", SqlKind.GreaterThanGreaterThanToken, out token) ||
+                    TokenParser.TryParse(sql, position, '+', SqlKind.PlusToken, out token) ||
+                    TokenParser.TryParse(sql, position, '-', SqlKind.MinusToken, out token) ||
+                    TokenParser.TryParse(sql, position, '*', SqlKind.AsteriskToken, out token) ||
+                    TokenParser.TryParse(sql, position, '/', SqlKind.SlashToken, out token) ||
+                    TokenParser.TryParse(sql, position, '^', SqlKind.ExponentToken, out token) ||
+                    TokenParser.TryParse(sql, position, '%', SqlKind.PercentToken, out token) ||
+                    TokenParser.TryParse(sql, position, '@', SqlKind.AtToken, out token) ||
+                    TokenParser.TryParse(sql, position, '!', SqlKind.ExclamationToken, out token) ||
+                    TokenParser.TryParse(sql, position, '&', SqlKind.AmpersandToken, out token) ||
+                    TokenParser.TryParse(sql, position, '|', SqlKind.BarToken, out token) ||
+                    TokenParser.TryParse(sql, position, '#', SqlKind.HashToken, out token) ||
+                    TokenParser.TryParse(sql, position, '~', SqlKind.TildeToken, out token) ||
+                    TokenParser.TryParse(sql, position, '=', SqlKind.EqualsToken, out token) ||
+                    TokenParser.TryParse(sql, position, '<', SqlKind.LessThanEqualsToken, out token) ||
+                    TokenParser.TryParse(sql, position, '>', SqlKind.GreaterThanToken, out token) ||
+                    TokenParser.TryParse(sql, position, '(', SqlKind.OpenParenToken, out token) ||
+                    TokenParser.TryParse(sql, position, ')', SqlKind.CloseParenToken, out token) ||
+                    TokenParser.TryParse(sql, position, '[', SqlKind.OpenBracketToken, out token) ||
+                    TokenParser.TryParse(sql, position, ']', SqlKind.CloseBracketToken, out token) ||
+                    TokenParser.TryParse(sql, position, '.', SqlKind.DotToken, out token) ||
+                    TokenParser.TryParse(sql, position, ',', SqlKind.CommaToken, out token) ||
+                    TokenParser.TryParse(sql, position, ';', SqlKind.SemicolonToken, out token) ||
+                    TokenParser.TryParse(sql, position, ':', SqlKind.ColonToken, out token))
                 {
                     position = token.End;
                     tokens.Add(token);

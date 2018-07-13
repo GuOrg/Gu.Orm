@@ -16,9 +16,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlToken CloseParen { get; }
 
-        public override bool IsValid => this.OpenParen.Kind == SqlKind.OpenParen &&
+        public override bool IsValid => this.OpenParen.Kind == SqlKind.OpenParenToken &&
                                         this.Expression?.IsValid == true &&
-                                        this.CloseParen.Kind == SqlKind.CloseParen;
+                                        this.CloseParen.Kind == SqlKind.CloseParenToken;
 
         public override string ToDisplayString() => $"{this.OpenParen.ToDisplayString(this.Sql)}{this.Expression.ToDisplayString()}{this.CloseParen.ToDisplayString(this.Sql)}";
     }
