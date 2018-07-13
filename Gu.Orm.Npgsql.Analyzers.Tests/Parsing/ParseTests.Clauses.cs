@@ -16,6 +16,15 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
                 Assert.AreEqual(true, node.IsValid);
                 SqlNodeAssert.Tree(node);
             }
+
+            [TestCase("WHERE id = 1")]
+            public void Where(string sql)
+            {
+                var node = Parse.WhereClause(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
+                SqlNodeAssert.Tree(node);
+            }
         }
     }
 }

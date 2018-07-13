@@ -2,16 +2,20 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing.Clauses
 {
     public class WhereClause : SqlNode
     {
-        protected WhereClause(string sql, SqlBinaryExpression condition)
+        public WhereClause(string sql, RawToken keyword, SqlBinaryExpression condition)
             : base(sql, CreateChildren(condition))
         {
+            this.Keyword = keyword.WithParent(this);
             this.Condition = condition;
         }
 
+        public SqlToken Keyword { get; }
+
         public SqlBinaryExpression Condition { get; }
 
-        public override bool IsValid => this.Condition?.IsValid == true;
+        public override bool IsValid => this.Keyword.Kind == SqlKind.WhereKeyword &&
+                                        this.Condition?.IsValid == true;
 
-        public override string ToDisplayString() => this.Condition.ToDisplayString();
+        public override string ToDisplayString() => $"{this.Keyword.ToDisplayString(this.Sql)} {this.Condition.ToDisplayString()}";
     }
 }
