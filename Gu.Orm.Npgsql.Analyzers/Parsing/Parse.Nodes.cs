@@ -37,6 +37,13 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return ColumnRef(sql, tokens, ref position);
         }
 
+        public static SqlParameter Parameter(string sql)
+        {
+            var tokens = Tokens(sql);
+            var position = 0;
+            return Parameter(sql, tokens, ref position);
+        }
+
         public static SqlLiteral Literal(string sql)
         {
             var tokens = Tokens(sql);
@@ -158,6 +165,23 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 !TryMatch(tokens, position, SqlKind.OpenParenToken, out _))
             {
                 return new ColumnRef(sql, name);
+            }
+
+            position = start;
+            return null;
+        }
+
+        private static SqlParameter Parameter(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        {
+            var start = position;
+            if (tokens.TryElementAt(position, out var candidate) &&
+                candidate.Kind == SqlKind.AtToken)
+            {
+                position++;
+                if (SqlSimpleName(sql, tokens, ref position, allowKeyword: true) is SqlSimpleName name)
+                {
+                    return new SqlParameter(sql, candidate, name);
+                }
             }
 
             position = start;
@@ -430,6 +454,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return (SqlExpression)Invocation(sql, tokens, ref position) ??
                    (SqlExpression)ParenthesizedExpression(sql, tokens, ref position) ??
                    (SqlExpression)BinaryExpression(sql, tokens, ref position) ??
+                   (SqlExpression)Parameter(sql, tokens, ref position) ??
                    (SqlExpression)PrefixUnaryExpression(sql, tokens, ref position) ??
                    (SqlExpression)Literal(sql, tokens, ref position) ??
                    (SqlExpression)Name(sql, tokens, ref position);

@@ -13,7 +13,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         public SqlExpression Identifier { get; }
 
-        public override bool IsValid => this.Identifier?.IsValid != false;
+        public override bool IsValid => this.At.Kind == SqlKind.AtToken &&
+                                        this.Identifier?.IsValid == true;
 
         public override string ToDisplayString() => $"{this.At.ToDisplayString(this.Sql)}{this.Identifier.ToDisplayString()}";
     }
