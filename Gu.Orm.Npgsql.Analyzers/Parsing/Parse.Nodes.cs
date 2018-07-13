@@ -186,7 +186,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 position++;
                 var right = Expression(sql, tokens, ref position);
                 if (right is SqlBinaryExpression binary &&
-                    binaryOperator.Kind.Precedence() < binary.Operator.Kind.Precedence())
+                    Precedence(binaryOperator.Kind) < Precedence(binary.Operator.Kind))
                 {
                     return new SqlBinaryExpression(
                         sql,
@@ -203,29 +203,91 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
             bool TryBinaryOperator(RawToken token, out RawToken result)
             {
-                if (token.Kind.IsBinaryOperator())
+                switch (token.Kind)
                 {
-                    result = token;
-                    return true;
-                }
-
-                if (token.Kind is SqlKind.Identifier)
-                {
-                    if (TryMatchKeyword(sql, token, "AND"))
-                    {
-                        result = new RawToken(SqlKind.AndKeyword, token.Start, token.End);
+                    case SqlKind.PlusToken:
+                    case SqlKind.MinusToken:
+                    case SqlKind.AsteriskToken:
+                    case SqlKind.SlashToken:
+                    case SqlKind.ExponentToken:
+                    case SqlKind.PercentToken:
+                    case SqlKind.SquareRootToken:
+                    case SqlKind.CubeRootToken:
+                    case SqlKind.ExclamationToken:
+                    case SqlKind.AmpersandToken:
+                    case SqlKind.BarToken:
+                    case SqlKind.HashToken:
+                    case SqlKind.TildeToken:
+                    case SqlKind.LessThanLessThanToken:
+                    case SqlKind.GreaterThanGreaterThanToken:
+                    case SqlKind.EqualsToken:
+                    case SqlKind.NotEqualsToken:
+                    case SqlKind.LessThanToken:
+                    case SqlKind.LessThanEqualsToken:
+                    case SqlKind.GreaterThanToken:
+                    case SqlKind.GreaterThanEqualsToken:
+                    case SqlKind.AndKeyword:
+                    case SqlKind.OrKeyword:
+                        result = token;
                         return true;
-                    }
+                    case SqlKind.Identifier:
+                        if (TryMatchKeyword(sql, token, "AND"))
+                        {
+                            result = new RawToken(SqlKind.AndKeyword, token.Start, token.End);
+                            return true;
+                        }
 
-                    if (TryMatchKeyword(sql, token, "OR"))
-                    {
-                        result = new RawToken(SqlKind.OrKeyword, token.Start, token.End);
-                        return true;
-                    }
+                        if (TryMatchKeyword(sql, token, "OR"))
+                        {
+                            result = new RawToken(SqlKind.OrKeyword, token.Start, token.End);
+                            return true;
+                        }
+
+                        break;
                 }
 
                 result = default;
                 return false;
+            }
+
+            int Precedence(SqlKind kind)
+            {
+                // https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html#SQL-PRECEDENCE
+                switch (kind)
+                {
+                    case SqlKind.ExponentToken:
+                        return 0;
+                    case SqlKind.AsteriskToken:
+                    case SqlKind.SlashToken:
+                    case SqlKind.PercentToken:
+                        return 1;
+                    case SqlKind.PlusToken:
+                    case SqlKind.MinusToken:
+                        return 2;
+                    case SqlKind.ExclamationToken:
+                    case SqlKind.AmpersandToken:
+                    case SqlKind.BarToken:
+                    case SqlKind.HashToken:
+                    case SqlKind.TildeToken:
+                    case SqlKind.LessThanLessThanToken:
+                    case SqlKind.GreaterThanGreaterThanToken:
+                        return 4;
+                    case SqlKind.LessThanToken:
+                    case SqlKind.LessThanEqualsToken:
+                    case SqlKind.GreaterThanToken:
+                    case SqlKind.GreaterThanEqualsToken:
+                    case SqlKind.EqualsToken:
+                    case SqlKind.NotEqualsToken:
+                        return 5;
+                    case SqlKind.NotKeyword:
+                        return 6;
+                    case SqlKind.AndKeyword:
+                        return 7;
+                    case SqlKind.OrKeyword:
+                        return 8;
+                    default:
+                        return 3;
+                }
             }
         }
 

@@ -127,11 +127,13 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("a / b")]
             [TestCase("a % b")]
             [TestCase("a ^ b")]
+            [TestCase("a * b")]
             [TestCase("a |/ b")]
             [TestCase("a ||/ b")]
             [TestCase("a ! b")]
             [TestCase("a & b")]
             [TestCase("a | b")]
+            [TestCase("a ~ b")]
             [TestCase("a # b")]
             [TestCase("a << b")]
             [TestCase("a >> b")]
@@ -149,6 +151,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             [TestCase("a = b AND c <> d", "a = b", "c <> d")]
             [TestCase("a OR b AND c", "a", "b AND c")]
             [TestCase("a AND b OR c", "a AND b", "c")]
+            [TestCase("(a OR b) AND c", "(a OR b)", "c")]
             public void BinaryExpressionPrecedence(string sql, string left, string right)
             {
                 var node = Parse.BinaryExpression(sql);
@@ -160,6 +163,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
             }
 
             [TestCase("(1)")]
+            [TestCase("(a + b)")]
             public void ParenthesizedExpression(string sql)
             {
                 var node = Parse.ParenthesizedExpression(sql);
