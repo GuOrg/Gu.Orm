@@ -25,9 +25,10 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing.Tokens
             new TestCaseData(SqlKind.CloseParenToken, false),
             new TestCaseData(SqlKind.OpenBracketToken, false),
             new TestCaseData(SqlKind.CloseBracketToken, false),
-            new TestCaseData(SqlKind.Comment, false),
-            new TestCaseData(SqlKind.BlockComment, false),
+            new TestCaseData(SqlKind.SingleLineCommentTrivia, false),
+            new TestCaseData(SqlKind.MultiLineCommentTrivia, false),
             new TestCaseData(SqlKind.None, false),
+            new TestCaseData(SqlKind.NotKeyword, false),
             new TestCaseData(SqlKind.PlusToken, true),
             new TestCaseData(SqlKind.MinusToken, true),
             new TestCaseData(SqlKind.AsteriskToken, true),
@@ -49,6 +50,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing.Tokens
             new TestCaseData(SqlKind.LessThanEqualsToken, true),
             new TestCaseData(SqlKind.GreaterThanToken, true),
             new TestCaseData(SqlKind.GreaterThanEqualsToken, true),
+            new TestCaseData(SqlKind.OrKeyword, true),
+            new TestCaseData(SqlKind.AndKeyword, true),
         };
 
         [TestCaseSource(nameof(BinaryOperators))]

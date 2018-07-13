@@ -178,11 +178,11 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                             end -= 1;
                         }
 
-                        token = new RawToken(SqlKind.Comment, start, end);
+                        token = new RawToken(SqlKind.SingleLineCommentTrivia, start, end);
                     }
                     else
                     {
-                        token = new RawToken(SqlKind.Comment, start, sql.Length);
+                        token = new RawToken(SqlKind.SingleLineCommentTrivia, start, sql.Length);
                     }
 
                     return true;
@@ -193,8 +193,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     var start = position;
                     position += 2;
                     token = SkipNext(sql, "*/", ref position)
-                        ? new RawToken(SqlKind.BlockComment, start, position)
-                        : new RawToken(SqlKind.BlockComment, start, sql.Length);
+                        ? new RawToken(SqlKind.MultiLineCommentTrivia, start, position)
+                        : new RawToken(SqlKind.MultiLineCommentTrivia, start, sql.Length);
 
                     return true;
                 }

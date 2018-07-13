@@ -24,8 +24,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 case SqlKind.CloseParenToken:
                 case SqlKind.OpenBracketToken:
                 case SqlKind.CloseBracketToken:
-                case SqlKind.Comment:
-                case SqlKind.BlockComment:
+                case SqlKind.SingleLineCommentTrivia:
+                case SqlKind.MultiLineCommentTrivia:
+                case SqlKind.NotKeyword:
                 case SqlKind.None:
                     return false;
                 case SqlKind.PlusToken:
@@ -49,6 +50,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                 case SqlKind.LessThanEqualsToken:
                 case SqlKind.GreaterThanToken:
                 case SqlKind.GreaterThanEqualsToken:
+                case SqlKind.AndKeyword:
+                case SqlKind.OrKeyword:
                     return true;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(kind), kind, null);

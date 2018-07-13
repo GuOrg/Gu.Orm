@@ -34,8 +34,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         LessThanEqualsToken,
         GreaterThanToken,
         GreaterThanEqualsToken,
-        Comment,
-        BlockComment,
+        SingleLineCommentTrivia,
+        MultiLineCommentTrivia,
         Identifier,
         QuotedIdentifier,
         String,
@@ -44,6 +44,6 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         None,
         NotKeyword,
         AndKeyword,
-        OrKeyword
+        OrKeyword,
     }
 }
