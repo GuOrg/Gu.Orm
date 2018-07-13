@@ -51,6 +51,13 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return BinaryExpression(sql, tokens, ref position);
         }
 
+        public static SqlPrefixUnaryExpression PrefixUnaryExpression(string sql)
+        {
+            var tokens = Tokens(sql);
+            var position = 0;
+            return PrefixUnaryExpression(sql, tokens, ref position);
+        }
+
         public static SqlParenthesizedExpression ParenthesizedExpression(string sql)
         {
             var tokens = Tokens(sql);
@@ -180,8 +187,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                        (SqlExpression)Name(sql, tokens, ref position);
             //// ReSharper restore RedundantCast
             if (left != null &&
-                tokens.TryElementAt(position, out var op) &&
-                TryBinaryOperator(op, out var binaryOperator))
+                tokens.TryElementAt(position, out var candidate) &&
+                TryBinaryOperator(out var binaryOperator))
             {
                 position++;
                 var right = Expression(sql, tokens, ref position);
@@ -201,9 +208,9 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             position = start;
             return null;
 
-            bool TryBinaryOperator(RawToken token, out RawToken result)
+            bool TryBinaryOperator(out RawToken result)
             {
-                switch (token.Kind)
+                switch (candidate.Kind)
                 {
                     case SqlKind.PlusToken:
                     case SqlKind.MinusToken:
@@ -228,18 +235,18 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                     case SqlKind.GreaterThanEqualsToken:
                     case SqlKind.AndKeyword:
                     case SqlKind.OrKeyword:
-                        result = token;
+                        result = candidate;
                         return true;
                     case SqlKind.Identifier:
-                        if (TryMatchKeyword(sql, token, "AND"))
+                        if (TryMatchKeyword(sql, candidate, "AND"))
                         {
-                            result = new RawToken(SqlKind.AndKeyword, token.Start, token.End);
+                            result = candidate.WithKind(SqlKind.AndKeyword);
                             return true;
                         }
 
-                        if (TryMatchKeyword(sql, token, "OR"))
+                        if (TryMatchKeyword(sql, candidate, "OR"))
                         {
-                            result = new RawToken(SqlKind.OrKeyword, token.Start, token.End);
+                            result = candidate.WithKind(SqlKind.OrKeyword);
                             return true;
                         }
 
@@ -289,6 +296,49 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
                         return 3;
                 }
             }
+        }
+
+        private static SqlPrefixUnaryExpression PrefixUnaryExpression(string sql, ImmutableArray<RawToken> tokens, ref int position)
+        {
+            var start = position;
+            if (tokens.TryElementAt(position, out var candidate) &&
+                TryUnaryOperator(out var token))
+            {
+                position++;
+                if (Expression(sql, tokens, ref position) is SqlExpression operand)
+                {
+                    return new SqlPrefixUnaryExpression(sql, token, operand);
+                }
+            }
+
+            position = start;
+            return null;
+
+            bool TryUnaryOperator(out RawToken result)
+            {
+                switch (candidate.Kind)
+                {
+                    case SqlKind.PlusToken:
+                    case SqlKind.MinusToken:
+                    case SqlKind.TildeToken:
+                    case SqlKind.ExclamationExclamationToken:
+                    case SqlKind.AtToken:
+                        result = candidate;
+                        return true;
+                    case SqlKind.Identifier:
+                        if (TryMatchKeyword(sql, candidate, "NOT"))
+                        {
+                            result = candidate.WithKind(SqlKind.NotKeyword);
+                            return true;
+                        }
+
+                        break;
+                }
+
+                result = default;
+                return false;
+            }
+
         }
 
         private static SqlParenthesizedExpression ParenthesizedExpression(string sql, ImmutableArray<RawToken> tokens, ref int position)
@@ -381,6 +431,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             return (SqlExpression)Invocation(sql, tokens, ref position) ??
                    (SqlExpression)ParenthesizedExpression(sql, tokens, ref position) ??
                    (SqlExpression)BinaryExpression(sql, tokens, ref position) ??
+                   (SqlExpression)PrefixUnaryExpression(sql, tokens, ref position) ??
                    (SqlExpression)Literal(sql, tokens, ref position) ??
                    (SqlExpression)Name(sql, tokens, ref position);
             //// ReSharper restore RedundantCast

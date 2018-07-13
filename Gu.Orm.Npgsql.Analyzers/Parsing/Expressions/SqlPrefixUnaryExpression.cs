@@ -1,8 +1,8 @@
 namespace Gu.Orm.Npgsql.Analyzers.Parsing
 {
-    public class SqlUnaryExpression : SqlExpression
+    public class SqlPrefixUnaryExpression : SqlExpression
     {
-        public SqlUnaryExpression(string sql, RawToken @operator, SqlExpression operand)
+        public SqlPrefixUnaryExpression(string sql, RawToken @operator, SqlExpression operand)
             : base(sql, CreateChildren(operand))
         {
             this.Operator = @operator.WithParent(this);

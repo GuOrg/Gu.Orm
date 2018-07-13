@@ -25,5 +25,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         public static RawToken SingleChar(SqlKind type, int position) => new RawToken(type, position, position + 1);
 
         public SqlToken WithParent(SqlNode node) => new SqlToken(this.Kind, this.Start, this.End, node);
+
+        public RawToken WithKind(SqlKind kind) => new RawToken(kind, this.Start, this.End);
     }
 }
