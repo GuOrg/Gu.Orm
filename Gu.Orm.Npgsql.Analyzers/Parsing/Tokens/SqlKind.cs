@@ -45,5 +45,6 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
         NotKeyword,
         AndKeyword,
         OrKeyword,
+        FromKeyword,
     }
 }

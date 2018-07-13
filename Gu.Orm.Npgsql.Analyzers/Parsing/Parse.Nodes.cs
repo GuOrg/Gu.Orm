@@ -511,7 +511,8 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
 
         private static bool TryMatchKeyword(string sql, RawToken token, string keyword)
         {
-            if (token.Length == keyword.Length)
+            if (token.Kind == SqlKind.Identifier &&
+                token.Length == keyword.Length)
             {
                 for (int i = 0; i < token.Length; i++)
                 {
