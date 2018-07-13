@@ -475,7 +475,7 @@ namespace Gu.Orm.Npgsql.Analyzers.Parsing
             if (TryMatch(tokens, position, SqlKind.QuotedIdentifier, out token))
             {
                 position++;
-                return new QuotedIdentifer(sql, token);
+                return new QuotedIdentifier(sql, token);
             }
 
             return null;

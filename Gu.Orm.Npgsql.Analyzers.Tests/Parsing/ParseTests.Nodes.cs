@@ -148,20 +148,6 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
                 AssertTree(node);
             }
 
-            [TestCase("- 1")]
-            [TestCase("+ 1")]
-            [TestCase("!! 1")]
-            [TestCase("~ 1")]
-            [TestCase("@ a")]
-            [TestCase("NOT a")]
-            public void PrefixUnaryExpression(string sql)
-            {
-                var node = Parse.PrefixUnaryExpression(sql);
-                Assert.AreEqual(sql, node.ToDisplayString());
-                Assert.AreEqual(true, node.IsValid);
-                AssertTree(node);
-            }
-
             [TestCase("a = b AND c <> d", "a = b", "c <> d")]
             [TestCase("a OR b AND c", "a", "b AND c")]
             [TestCase("a AND b OR c", "a AND b", "c")]
@@ -172,6 +158,20 @@ namespace Gu.Orm.Npgsql.Analyzers.Tests.Parsing
                 Assert.AreEqual(sql, node.ToDisplayString());
                 Assert.AreEqual(left, node.Left.ToDisplayString());
                 Assert.AreEqual(right, node.Right.ToDisplayString());
+                Assert.AreEqual(true, node.IsValid);
+                AssertTree(node);
+            }
+
+            [TestCase("- 1")]
+            [TestCase("+ 1")]
+            [TestCase("!! 1")]
+            [TestCase("~ 1")]
+            [TestCase("@ a")]
+            [TestCase("NOT a")]
+            public void PrefixUnaryExpression(string sql)
+            {
+                var node = Parse.PrefixUnaryExpression(sql);
+                Assert.AreEqual(sql, node.ToDisplayString());
                 Assert.AreEqual(true, node.IsValid);
                 AssertTree(node);
             }
