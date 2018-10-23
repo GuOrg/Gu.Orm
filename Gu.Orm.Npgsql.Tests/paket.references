@@ -5,6 +5,10 @@ group Test
   NUnit
 
 group Analyzers
-  IDisposableAnalyzers
+  AsyncUsageAnalyzers
   Gu.Analyzers
+  IDisposableAnalyzers
+  Microsoft.CodeAnalysis.FxCopAnalyzers
+  PropertyChangedAnalyzers
+  ReflectionAnalyzers
   StyleCop.Analyzers

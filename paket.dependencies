@@ -22,6 +22,11 @@ group Test
 group Analyzers
   source https://www.nuget.org/api/v2/
   storage: none
+  nuget AsyncUsageAnalyzers
+  nuget Gu.Analyzers
   nuget IDisposableAnalyzers
-  nuget Gu.Analyzers prerelease
+  nuget Microsoft.CodeAnalysis.FxCopAnalyzers
+  nuget PropertyChangedAnalyzers
+  nuget PublicApiAnalyzer prerelease
+  nuget ReflectionAnalyzers prerelease
   nuget StyleCop.Analyzers prerelease

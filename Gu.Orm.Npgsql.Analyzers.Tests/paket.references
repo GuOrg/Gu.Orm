@@ -7,6 +7,10 @@ group Test
   Gu.Roslyn.Asserts
 
 group Analyzers
-  IDisposableAnalyzers
+  AsyncUsageAnalyzers
   Gu.Analyzers
+  IDisposableAnalyzers
+  Microsoft.CodeAnalysis.FxCopAnalyzers
+  PropertyChangedAnalyzers
+  ReflectionAnalyzers
   StyleCop.Analyzers

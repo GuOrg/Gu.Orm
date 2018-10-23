@@ -1,0 +1,14 @@
+﻿Gu.Orm.Npgsql.Database
+Gu.Orm.Npgsql.NpgsqlCommandExt
+Gu.Orm.Npgsql.NpgsqlConnectionExt
+static Gu.Orm.Npgsql.Database.QuerySingle<T>(string connectionString, string sql) -> System.Collections.Generic.IEnumerable<T>
+static Gu.Orm.Npgsql.Database.QuerySingle<T>(string connectionString, string sql, Npgsql.NpgsqlParameter parameter, System.Func<Npgsql.NpgsqlDataReader, T> read, out T result) -> bool
+static Gu.Orm.Npgsql.Database.QuerySingle<T>(string connectionString, string sql, Npgsql.NpgsqlParameter parameter, out T result) -> bool
+static Gu.Orm.Npgsql.Database.QuerySingle<T>(string connectionString, string sql, System.Func<Npgsql.NpgsqlDataReader, T> read) -> System.Collections.Generic.IEnumerable<T>
+static Gu.Orm.Npgsql.NpgsqlCommandExt.Map<T>(this Npgsql.NpgsqlCommand command) -> System.Collections.Generic.IEnumerable<T>
+static Gu.Orm.Npgsql.NpgsqlCommandExt.Map<T>(this Npgsql.NpgsqlCommand command, System.Func<Npgsql.NpgsqlDataReader, T> read) -> System.Collections.Generic.IEnumerable<T>
+static Gu.Orm.Npgsql.NpgsqlCommandExt.MapSingle<T>(this Npgsql.NpgsqlCommand command, System.Func<Npgsql.NpgsqlDataReader, T> read, out T result) -> bool
+static Gu.Orm.Npgsql.NpgsqlCommandExt.MapSingle<T>(this Npgsql.NpgsqlCommand command, out T result) -> bool
+static Gu.Orm.Npgsql.NpgsqlConnectionExt.CreateCommand(this Npgsql.NpgsqlConnection connection, string sql) -> Npgsql.NpgsqlCommand
+static Gu.Orm.Npgsql.NpgsqlConnectionExt.CreateCommand(this Npgsql.NpgsqlConnection connection, string sql, Npgsql.NpgsqlParameter parameter) -> Npgsql.NpgsqlCommand
+static Gu.Orm.Npgsql.NpgsqlConnectionExt.CreateCommand(this Npgsql.NpgsqlConnection connection, string sql, Npgsql.NpgsqlParameter parameter1, Npgsql.NpgsqlParameter parameter2) -> Npgsql.NpgsqlCommand
