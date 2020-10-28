@@ -1,23 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2035
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{4792FAAB-A120-4BBC-9C26-1F9B8686EE7C}"
-	ProjectSection(SolutionItems) = preProject
-		paket.dependencies = paket.dependencies
-		paket.lock = paket.lock
-		.paket\paket.targets = .paket\paket.targets
-		.paket\Readme.paket.md = .paket\Readme.paket.md
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Orm.Npgsql", "Gu.Orm.Npgsql\Gu.Orm.Npgsql.csproj", "{04B7889F-AD6A-4CEC-934D-669BF7EDCD2F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Orm.Npgsql.Tests", "Gu.Orm.Npgsql.Tests\Gu.Orm.Npgsql.Tests.csproj", "{9362C78A-AB5A-4157-9F95-9CECC92B5AE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Orm.Npgsql.Analyzers", "Gu.Orm.Npgsql.Analyzers\Gu.Orm.Npgsql.Analyzers.csproj", "{CEA3B796-DA4B-47D0-80FA-24E55A7FA75C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Orm.Npgsql.Analyzers", "Gu.Orm.Npgsql.Analyzers\Gu.Orm.Npgsql.Analyzers.csproj", "{CEA3B796-DA4B-47D0-80FA-24E55A7FA75C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Orm.Npgsql.Analyzers.Tests", "Gu.Orm.Npgsql.Analyzers.Tests\Gu.Orm.Npgsql.Analyzers.Tests.csproj", "{4EA7CD46-2E5E-45EB-834E-677BAFC1FCE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{8E288BAC-4FF2-4ABC-A014-542F760B8143}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Gu.Orm.sln.DotSettings = Gu.Orm.sln.DotSettings
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
